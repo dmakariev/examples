@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Person CRUD Application</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #f5f5f5;
+            }
+
+            #app {
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: #fff;
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            }
+
+            h1 {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+
+            ul {
+                list-style: none;
+                padding: 0;
+            }
+
+            li {
+                border: 1px solid #ddd;
+                padding: 10px;
+                margin: 10px 0;
+                background-color: #fff;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            button {
+                padding: 5px 10px;
+                background-color: #007bff;
+                color: #fff;
+                border: none;
+                cursor: pointer;
+            }
+
+            form {
+                display: flex;
+                flex-direction: column;
+            }
+
+            input {
+                margin: 5px 0;
+                padding: 5px;
+                border: 1px solid #ddd;
+            }
+
+            button[type="submit"] {
+                background-color: #28a745;
+            }
+
+            .modal {
+                position: fixed;
+                z-index: 1;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.4);
+                justify-content: center;
+                align-items: center;
+            }
+
+            .modal-content {
+                background-color: #fff;
+                border: 1px solid #ddd;
+                padding: 20px;
+                width: 70%;
+                margin: 10% auto;
+            }
+
+            .pagination {
+                display: flex;
+                justify-content: center;
+                margin-top: 20px;
+            }
+
+            .page-item {
+                margin: 0 5px;
+                cursor: pointer;
+            }
+
+            .page-item.active {
+                font-weight: bold;
+            }
+        </style>
+        <script src="https://cdn.jsdelivr.net/npm/vue@3.3.4/dist/vue.global.js"></script>
+    </head>
+    <body>
+        <div id="app">
+            <h1>Person CRUD Application</h1>
+            <button @click="showPersonModal(null)">Add Person</button>
+            <ul>
+                <li v-for="person in persons" :key="person.id">
+                    {{ person.firstName }} {{ person.lastName }} ({{ person.birthYear }} year of birth)
+                    <button @click="showPersonModal(person)">Edit</button>
+                    <button @click="deletePerson(person.id)">Delete</button>
+                </li>
+            </ul>
+            <div class="pagination">
+                <span v-for="page in totalPages" :key="page" @click="changePage(page)" class="page-item" :class="{ active: currentPage === page }">{{ page }}</span>
+            </div>
+
+            <!-- Modal -->
+            <div class="modal" v-if="modalVisible">
+                <div class="modal-content">
+                    <h2>{{ editMode ? 'Edit' : 'Add' }} Person</h2>
+                    <form @submit.prevent="savePerson">
+                        <input type="text" v-model="formData.firstName" placeholder="First Name" required>
+                        <input type="text" v-model="formData.lastName" placeholder="Last Name" required>
+                        <input type="number" v-model="formData.birthYear" placeholder="Year of birth" required>
+                        <button type="submit">{{ editMode ? 'Update' : 'Add' }}</button>
+                        <button @click="closeModal">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        </div>        
+
+        <script>
+            const {createApp, ref, computed} = Vue;
+
+            createApp({
+                data() {
+                    return {
+                        persons: [],
+                        modalVisible: false,
+                        editMode: false,
+                        formData: {
+                            firstName: '',
+                            lastName: '',
+                            age: ''
+                        },
+                        editedPersonId: null,
+                        pageSize: 5,
+                        currentPage: 1,
+                        totalPages: 1
+                    };
+                },
+                methods: {
+                    getAllPersons(page) {
+                        fetch(`/api/persons?page=${page - 1}&size=${this.pageSize}`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    this.persons = data.content;
+                                    this.totalPages = data.totalPages;
+                                })
+                                .catch(error => {
+                                    console.error('Error fetching persons:', error);
+                                });
+                    },
+                    showPersonModal(person) {
+                        this.editMode = !!person;
+                        this.modalVisible = true;
+                        if (person) {
+                            this.editedPersonId = person.id;
+                            this.formData = {...person};
+                        } else {
+                            this.resetForm();
+                        }
+                    },
+                    savePerson() {
+                        if (this.editMode) {
+                            fetch(`/api/persons/${this.editedPersonId}`, {
+                                method: 'PUT',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(this.formData)
+                            })
+                                    .then(() => {
+                                        this.getAllPersons(this.currentPage);
+                                        this.closeModal();
+                                    })
+                                    .catch(error => {
+                                        console.error('Error updating person:', error);
+                                    });
+                        } else {
+                            fetch('/api/persons', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(this.formData)
+                            })
+                                    .then(() => {
+                                        this.getAllPersons(this.currentPage);
+                                        this.closeModal();
+                                    })
+                                    .catch(error => {
+                                        console.error('Error adding person:', error);
+                                    });
+                        }
+                    },
+                    deletePerson(personId) {
+                        fetch(`/api/persons/${personId}`, {
+                            method: 'DELETE'
+                        })
+                                .then(() => {
+                                    this.getAllPersons(this.currentPage);
+                                })
+                                .catch(error => {
+                                    console.error('Error deleting person:', error);
+                                });
+                    },
+                    closeModal() {
+                        this.modalVisible = false;
+                        this.editMode = false;
+                        this.resetForm();
+                    },
+                    resetForm() {
+                        this.formData = {
+                            firstName: '',
+                            lastName: '',
+                            age: ''
+                        };
+                        this.editedPersonId = null;
+                    },
+                    changePage(page) {
+                        this.currentPage = page;
+                        this.getAllPersons(page);
+                    }
+                },
+                mounted() {
+                    this.getAllPersons(this.currentPage);
+                }
+            }).mount('#app');
+        </script>
+    </body>
+</html>
