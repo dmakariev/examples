@@ -19,8 +19,8 @@ public class springbootHelloWorld {
         SpringApplication.run(springbootHelloWorld.class, args);
     }
 
-    @GetMapping("/hi")
+    @GetMapping("/")
     public String sayHi(@RequestParam(required = false, defaultValue = "World") String name) {
-        return "Hello " + name + "!";
+        return "Hello, " + name + "!";
     }
 }

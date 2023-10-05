@@ -91,7 +91,7 @@ class HiController {
 
     @GetMapping("/hi")
     public String sayHi(@RequestParam(required = false, defaultValue = "World") String name) {
-        return "Hello " + name + "!";
+        return "Hello, " + name + "!";
     }
 }
 

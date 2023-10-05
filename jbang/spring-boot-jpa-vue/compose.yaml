@@ -23,7 +23,22 @@ services:
       - POSTGRES_PASSWORD=pass-example
     expose:
       - 5432
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@user.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+       - pgadmin:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    networks:
+      - spring-postgres
+    restart: always      
 volumes:
   db-data:
+  pgadmin:
 networks:
   spring-postgres:
