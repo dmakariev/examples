@@ -4,14 +4,13 @@
 //DEPS org.springframework.boot:spring-boot-starter-web
 //DEPS org.springframework.boot:spring-boot-starter-data-jpa
 //DEPS org.springframework.boot:spring-boot-starter-actuator
-//DEPS jakarta.xml.bind:jakarta.xml.bind-api
-//DEPS org.glassfish.jaxb:jaxb-runtime
 //DEPS com.h2database:h2
 //DEPS org.postgresql:postgresql
 //DEPS org.projectlombok:lombok
 //DEPS org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0
-//JAVA_OPTIONS -Dserver.port=8082 -Dspring.h2.console.enabled=true -Dspring.h2.console.settings.web-allow-others=true
+//JAVA_OPTIONS -Dserver.port=8080
 //JAVA_OPTIONS -Dspring.datasource.url=jdbc:h2:mem:person-db;MODE=PostgreSQL;
+//JAVA_OPTIONS -Dspring.h2.console.enabled=true -Dspring.h2.console.settings.web-allow-others=true
 //JAVA_OPTIONS -Dmanagement.endpoints.web.exposure.include=health,env,loggers
 //FILES META-INF/resources/index.html=index-fetch.html
 package com.makariev.examples.jbang;
@@ -26,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,9 +40,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -50,10 +48,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestParam;
 
-@Slf4j
-@EnableJpaRepositories
+
 @SpringBootApplication
 public class springbootJpaVue {
 
