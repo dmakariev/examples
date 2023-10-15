@@ -1,2 +1,4 @@
-java-core/stack-deque/target
-/java-core/queue/target/
+.classpath
+.project
+.settings/
+target/
