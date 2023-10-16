@@ -2,3 +2,4 @@
 .project
 .settings/
 target/
+/java-core/crawler/nbproject/
