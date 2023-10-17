@@ -1,15 +1,17 @@
 package com.makariev.examples.spring.crudmockmvc.person;
 
+import java.util.List;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.CoreMatchers.is;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -112,5 +114,46 @@ class PersonControllerTest {
 
         // Verify that the Person was deleted from the database
         assertThat(personRepository.existsById(savedPerson.getId())).isFalse();
+    }
+
+    // Test method for retrieving a list of persons
+    @Test
+    void shouldRetrievePersonList() throws Exception {
+        // Create a new persons and save them in the database
+        List.of(
+                new Person("Alice", "Smith", 1990),
+                new Person("Ada", "Lovelace", 1815),
+                new Person("Niklaus", "Wirth", 1934),
+                new Person("Donald", "Knuth", 1938),
+                new Person("Edsger", "Dijkstra", 1930),
+                new Person("Grace", "Hopper", 1906),
+                new Person("John", "Backus", 1924)
+        ).forEach(personRepository::save);
+
+        // Perform a GET request to retrieve list of persons
+        mockMvc.perform(
+                get("/api/persons")
+                        .param("page", "0")
+                        .param("size", "1")
+        ).andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.totalElements", is(7)))
+                .andExpect(jsonPath("$.numberOfElements", is(1)));
+
+        // Perform a GET request to retrieve list of persons, 
+        // from page 3, when the page size is 1, sorted by `firstName`
+        mockMvc.perform(
+                get("/api/persons")
+                        .param("page", "2")
+                        .param("size", "1")
+                        .param("sort", "firstName,asc")
+        ).andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.totalElements", is(7)))
+                .andExpect(jsonPath("$.numberOfElements", is(1)))
+                .andExpect(jsonPath("$.content[0].firstName", is("Donald")));
+
+        //clean the database
+        personRepository.deleteAll();
     }
 }
