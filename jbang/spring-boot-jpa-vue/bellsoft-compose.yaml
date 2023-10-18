@@ -1,8 +1,8 @@
 services:
   backend:
-    image: spring-boot-jpa-vue_backend:aws-alpine
+    image: spring-boot-jpa-vue_backend:bellsoft
     build: 
-      dockerfile: ./Dockerfile    
+      dockerfile: ./bellsoft-Dockerfile
     ports:
       - 8080:8088
     environment:
