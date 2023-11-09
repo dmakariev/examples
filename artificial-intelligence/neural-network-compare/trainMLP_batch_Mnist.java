@@ -18,7 +18,7 @@ public class trainMLP_batch_Mnist {
 
         //1500, 848sec (~14min), 98.20%
         // Example: Assuming the data has 784 inputs, 64 hidden neurons, and 10 output
-        final SimpleMLPBatch myMLP = new SimpleMLPBatch(784, 400, 10);
+        final SimpleMLPBatch myMLP = new SimpleMLPBatch(784, 64, 10);
 //        final SimpleMLPBatch myMLP = TrainingData.loadFrom("model/mlp_batch_mnist-2000-1000-500-200.zip", (weights, biases) -> {
 //            return new SimpleMLPBatch(weights, biases);
 //        });
@@ -28,7 +28,7 @@ public class trainMLP_batch_Mnist {
         int decayStep = 2;  // e.g., reduce learning rate every 2 epochs
 
         // Train
-        for (int epoch = 0; epoch < 30; epoch++) {
+        for (int epoch = 0; epoch < 5; epoch++) {
             if (epoch % decayStep == 0 && epoch != 0) {
                 initialLearningRate *= decayRate;
             }
@@ -112,7 +112,7 @@ public class trainMLP_batch_Mnist {
         System.out.println("\nexecution time: " + (System.currentTimeMillis() - startTime) + "ms\n");
         
         myMLP.saveModel((weights, biases) -> {
-            TrainingData.saveTo("model/mlp_batch_mnist-400-30x.zip", weights, biases);
+            TrainingData.saveTo("model/mlp_batch_mnist.csv", weights, biases);
         });
     }
 

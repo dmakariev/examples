@@ -13,7 +13,7 @@ public class loadMLP_batch_Mnist {
         //1500, 848sec (~14min), 98.20%
         // Example: Assuming the data has 784 inputs, 64 hidden neurons, and 10 output
         //784-2500-2000-1500-1000-500-10
-        final SimpleMLPBatch myMLP = TrainingData.loadFrom("model/mlp_batch_mnist-2000-1000-500-200.zip", (weights, biases) -> {
+        final SimpleMLPBatch myMLP = TrainingData.loadFrom("model/mlp_batch_mnist-400-30x.zip", (weights, biases) -> {
             return new SimpleMLPBatch(weights, biases);
         });
 

@@ -8,7 +8,7 @@ public class loadMLP_Mnist {
     public static void main(String[] args) {
         final long startTime = System.currentTimeMillis();
 
-        final SimpleMLP myMLP = TrainingData.loadFrom("model/mlp_mnist.zip", (weights, biases) -> {
+        final SimpleMLP myMLP = TrainingData.loadFrom("model/mlp_batch_mnist-400-30x.zip", (weights, biases) -> {
             return new SimpleMLP(weights, biases);
         });
 
