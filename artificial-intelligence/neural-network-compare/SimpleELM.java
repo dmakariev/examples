@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import org.apache.commons.math3.linear.DefaultRealMatrixChangingVisitor;
 import org.apache.commons.math3.linear.LUDecomposition;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
@@ -65,14 +66,24 @@ public class SimpleELM {
         return MatrixUtils.createRealMatrix(data);
     }
 
+//    private RealMatrix activationFunction(RealMatrix matrix) {
+//        double[][] data = matrix.getData();
+//        for (int i = 0; i < matrix.getRowDimension(); i++) {
+//            for (int j = 0; j < matrix.getColumnDimension(); j++) {
+//                data[i][j] = ACTIVATION_FUNCTION.function(data[i][j]);
+//            }
+//        }
+//        return MatrixUtils.createRealMatrix(data);
+//    }
     private RealMatrix activationFunction(RealMatrix matrix) {
-        double[][] data = matrix.getData();
-        for (int i = 0; i < matrix.getRowDimension(); i++) {
-            for (int j = 0; j < matrix.getColumnDimension(); j++) {
-                data[i][j] = ACTIVATION_FUNCTION.function(data[i][j]);
+        final RealMatrix copy = matrix.copy();
+        copy.walkInOptimizedOrder(new DefaultRealMatrixChangingVisitor() {
+            @Override
+            public double visit(int row, int column, double value) {
+                return ACTIVATION_FUNCTION.function(value);
             }
-        }
-        return MatrixUtils.createRealMatrix(data);
+        });
+        return copy;
     }
 
     public void train(List<double[]> inputBatch, List<double[]> targetBatch) {
@@ -113,9 +124,12 @@ public class SimpleELM {
         RealMatrix H = activationFunction(inputWeights.multiply(X).add(repeatColumn(biases, X.getColumnDimension())));
         RealMatrix K = H.transpose().multiply(M).multiply(H).add(MatrixUtils.createRealIdentityMatrix(H.getColumnDimension()));
         RealMatrix inverseK = new LUDecomposition(K).getSolver().getInverse();
-        RealMatrix betaUpdate = M.multiply(H).multiply(inverseK).multiply((T.subtract(outputWeights.multiply(H))).transpose());
+
+        RealMatrix temp = M.multiply(H).multiply(inverseK);
+
+        RealMatrix betaUpdate = temp.multiply((T.subtract(outputWeights.multiply(H))).transpose());
         outputWeights = outputWeights.add(betaUpdate.transpose());
-        M = M.subtract(M.multiply(H).multiply(inverseK).multiply(H.transpose()).multiply(M));
+        M = M.subtract(temp.multiply(H.transpose()).multiply(M));
     }
 
     public double[] predict(double[] input) {
