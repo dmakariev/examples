@@ -36,21 +36,10 @@ public class SimpleMLPBatch {
 
     public SimpleMLPBatch(Layer... layers) {
         final long startTime = System.currentTimeMillis();
-        this.weights = new RealMatrix[layers.length - 1];
-        this.biases = new RealMatrix[layers.length - 1];
+        final WeightBiasInit wbInit = doHeInitialization(layerSizes(layers), random);
+        this.weights = wbInit.weights;
+        this.biases = wbInit.biases;
         this.functions = functions(layers);
-
-        for (int i = 0; i < layers.length - 1; i++) {
-            weights[i] = MatrixUtils.createRealMatrix(layers[i + 1].size(), layers[i].size());
-            biases[i] = MatrixUtils.createColumnRealMatrix(new double[layers[i + 1].size()]);
-            double stddev = Math.sqrt(2.0 / layers[i].size()); // Standard deviation for He initialization
-            for (int row = 0; row < layers[i + 1].size(); row++) {
-                for (int col = 0; col < layers[i].size(); col++) {
-                    weights[i].setEntry(row, col, random.nextGaussian() * stddev);
-                }
-                biases[i].setEntry(row, 0, 0.0);  // Biases can be initialized to 0
-            }
-        }
         System.out.printf("finished initialization in %dms\n", (System.currentTimeMillis() - startTime));
     }
 
@@ -229,5 +218,35 @@ public class SimpleMLPBatch {
             layerSizes[i + 1] = weightsList.get(i).length;
         }
         return layerSizes;
+    }
+
+    private static int[] layerSizes(Layer[] layers) {
+        int[] layerSizes = new int[layers.length];
+        for (int i = 0; i < layers.length; i++) {
+            layerSizes[i] = layers[i].size();
+        }
+        return layerSizes;
+    }
+
+    private record WeightBiasInit(RealMatrix[] weights, RealMatrix[] biases) {
+
+    }
+
+    private static WeightBiasInit doHeInitialization(int[] layerSizes, Random random) {
+        final RealMatrix[] weights = new RealMatrix[layerSizes.length - 1];
+        final RealMatrix[] biases = new RealMatrix[layerSizes.length - 1];
+
+        for (int i = 0; i < layerSizes.length - 1; i++) {
+            weights[i] = MatrixUtils.createRealMatrix(layerSizes[i + 1], layerSizes[i]);
+            biases[i] = MatrixUtils.createColumnRealMatrix(new double[layerSizes[i + 1]]);
+            double stddev = Math.sqrt(2.0 / layerSizes[i]); // Standard deviation for He initialization
+            for (int row = 0; row < layerSizes[i + 1]; row++) {
+                for (int col = 0; col < layerSizes[i]; col++) {
+                    weights[i].setEntry(row, col, random.nextGaussian() * stddev);
+                }
+                biases[i].setEntry(row, 0, 0.0);  // Biases can be initialized to 0
+            }
+        }
+        return new WeightBiasInit(weights, biases);
     }
 }
