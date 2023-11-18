@@ -25,10 +25,10 @@ public class SimpleELM {
 
     private static final Random random = new Random();
 
-    private static final ActivationFunction ACTIVATION_FUNCTION = ActivationFunction.leakyReLU();
+    //private static final ActivationFunction ACTIVATION_FUNCTION = ActivationFunction.leakyReLU();
     //private static final ActivationFunction ACTIVATION_FUNCTION = ActivationFunction.ReLU();
     //private final static ActivationFunction ACTIVATION_FUNCTION = ActivationFunction.tanh();
-    //private final static ActivationFunction ACTIVATION_FUNCTION = ActivationFunction.sigmoid();
+    private final static ActivationFunction ACTIVATION_FUNCTION = ActivationFunction.sigmoid();
 
     public SimpleELM(int numInputNodes, int numHiddenNodes, int numOutputNodes) {
         final long startTime = System.currentTimeMillis();
@@ -130,6 +130,7 @@ public class SimpleELM {
         RealMatrix betaUpdate = temp.multiply((T.subtract(outputWeights.multiply(H))).transpose());
         outputWeights = outputWeights.add(betaUpdate.transpose());
         M = M.subtract(temp.multiply(H.transpose()).multiply(M));
+
     }
 
     public double[] predict(double[] input) {
@@ -151,6 +152,23 @@ public class SimpleELM {
             }
         }
         return MatrixUtils.createRealMatrix(data);
+    }
+
+    public double computeMeanSquaredError(List<double[]> inputBatch, List<double[]> targetBatch) {
+        double totalSquaredError = 0.0;
+        int totalSamples = inputBatch.size();
+
+        for (int i = 0; i < totalSamples; i++) {
+            double[] prediction = predict(inputBatch.get(i));
+            double[] target = targetBatch.get(i);
+
+            for (int j = 0; j < target.length; j++) {
+                double error = target[j] - prediction[j];
+                totalSquaredError += error * error;
+            }
+        }
+
+        return totalSquaredError / totalSamples;
     }
 
     public void saveModel(Function<double[][], Function<double[][], Consumer<double[][]>>> triConsumer) {

@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.function.BiConsumer;
-import org.apache.commons.math3.analysis.UnivariateFunction;
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
@@ -24,20 +23,29 @@ public class SimpleMLPBatch {
     //private final static ActivationFunction ACTIVATION_FUNCTION = ActivationFunction.tanh();
     //private final static ActivationFunction ACTIVATION_FUNCTION = ActivationFunction.sigmoid();
 
-    private static final UnivariateFunction FUNCTION = ACTIVATION_FUNCTION::function;
-    private static final UnivariateFunction FUNCTION_DERIVATIVE = ACTIVATION_FUNCTION::functionDerivative;
+//    private static final UnivariateFunction FUNCTION = ACTIVATION_FUNCTION::function;
+//    private static final UnivariateFunction FUNCTION_DERIVATIVE = ACTIVATION_FUNCTION::functionDerivative;
+    private final ActivationFunction[] functions;
+
+    //private static final double LAMBDA = 0.001; // L2 regularization factor
+    private final double regularizationCoefficient = 0.001; // L2 regularization factor
 
     public SimpleMLPBatch(int... layerSizes) {
-        final long startTime = System.currentTimeMillis();
-        this.weights = new RealMatrix[layerSizes.length - 1];
-        this.biases = new RealMatrix[layerSizes.length - 1];
+        this(of(layerSizes));
+    }
 
-        for (int i = 0; i < layerSizes.length - 1; i++) {
-            weights[i] = MatrixUtils.createRealMatrix(layerSizes[i + 1], layerSizes[i]);
-            biases[i] = MatrixUtils.createColumnRealMatrix(new double[layerSizes[i + 1]]);
-            double stddev = Math.sqrt(2.0 / layerSizes[i]); // Standard deviation for He initialization
-            for (int row = 0; row < layerSizes[i + 1]; row++) {
-                for (int col = 0; col < layerSizes[i]; col++) {
+    public SimpleMLPBatch(Layer... layers) {
+        final long startTime = System.currentTimeMillis();
+        this.weights = new RealMatrix[layers.length - 1];
+        this.biases = new RealMatrix[layers.length - 1];
+        this.functions = functions(layers);
+
+        for (int i = 0; i < layers.length - 1; i++) {
+            weights[i] = MatrixUtils.createRealMatrix(layers[i + 1].size(), layers[i].size());
+            biases[i] = MatrixUtils.createColumnRealMatrix(new double[layers[i + 1].size()]);
+            double stddev = Math.sqrt(2.0 / layers[i].size()); // Standard deviation for He initialization
+            for (int row = 0; row < layers[i + 1].size(); row++) {
+                for (int col = 0; col < layers[i].size(); col++) {
                     weights[i].setEntry(row, col, random.nextGaussian() * stddev);
                 }
                 biases[i].setEntry(row, 0, 0.0);  // Biases can be initialized to 0
@@ -47,6 +55,10 @@ public class SimpleMLPBatch {
     }
 
     public SimpleMLPBatch(List<double[][]> weightsList, List<double[][]> biasesList) {
+        this(of(layerSizes(weightsList)), weightsList, biasesList);
+    }
+
+    public SimpleMLPBatch(Layer[] layers, List<double[][]> weightsList, List<double[][]> biasesList) {
         final long startTime = System.currentTimeMillis();
         if (weightsList.size() != biasesList.size()) {
             throw new IllegalArgumentException("weights.size=" + weightsList.size() + " and biases.size=" + biasesList.size() + " should be the same ");
@@ -58,6 +70,8 @@ public class SimpleMLPBatch {
             this.weights[n] = MatrixUtils.createRealMatrix(weightsList.get(n));
             this.biases[n] = MatrixUtils.createRealMatrix(biasesList.get(n));
         }
+
+        this.functions = functions(layers);
         System.out.printf("finished loading in %dms\n", (System.currentTimeMillis() - startTime));
     }
 
@@ -69,7 +83,7 @@ public class SimpleMLPBatch {
         RealVector a = input;
         for (int i = 0; i < weights.length; i++) {
             a = weights[i].operate(a).add(biases[i].getColumnVector(0));
-            a.mapToSelf(FUNCTION);
+            a.mapToSelf(functions[i]::function);
         }
         return a;
     }
@@ -92,6 +106,7 @@ public class SimpleMLPBatch {
         for (int n = 0; n < inputBatch.size(); n++) {
             RealVector input = new ArrayRealVector(inputBatch.get(n));
             RealVector target = new ArrayRealVector(targetBatch.get(n));
+
             Pair<RealMatrix[], RealMatrix[]> gradients = backprop(input, target);
             for (int i = 0; i < weights.length; i++) {
                 weightGradientsSum[i] = weightGradientsSum[i].add(gradients.first()[i]);
@@ -103,8 +118,11 @@ public class SimpleMLPBatch {
             RealMatrix avgWeightGradient = weightGradientsSum[i].scalarMultiply(1.0 / inputBatch.size());
             RealMatrix avgBiasGradient = biasGradientsSum[i].scalarMultiply(1.0 / inputBatch.size());
 
+            // L2 Regularization
+            RealMatrix regularizationTerm = weights[i].scalarMultiply(regularizationCoefficient);
+
             // Update weights and biases
-            weights[i] = weights[i].subtract(avgWeightGradient.scalarMultiply(learningRate));
+            weights[i] = weights[i].subtract(avgWeightGradient.add(regularizationTerm).scalarMultiply(learningRate));
             biases[i] = biases[i].subtract(avgBiasGradient.scalarMultiply(learningRate));
         }
     }
@@ -124,7 +142,7 @@ public class SimpleMLPBatch {
         for (int i = 0; i < weights.length; i++) {
             RealVector z = weights[i].operate(a).add(biases[i].getColumnVector(0));
             zs.add(z);
-            a = z.map(FUNCTION);
+            a = z.map(functions[i]::function);
             activations.add(a);
         }
 
@@ -140,12 +158,29 @@ public class SimpleMLPBatch {
             biasGradients[i] = MatrixUtils.createColumnRealMatrix(delta.toArray());
 
             if (i > 0) {
-                RealVector sp = zs.get(i - 1).map(FUNCTION_DERIVATIVE);
+                RealVector sp = zs.get(i - 1).map(functions[i]::functionDerivative);
                 delta = weights[i].transpose().operate(delta).ebeMultiply(sp);
             }
         }
 
         return new Pair<>(weightGradients, biasGradients);
+    }
+
+    public double computeMeanSquaredError(List<double[]> inputBatch, List<double[]> targetBatch) {
+        double totalSquaredError = 0.0;
+        int totalSamples = inputBatch.size();
+
+        for (int i = 0; i < totalSamples; i++) {
+            double[] prediction = predict(inputBatch.get(i));
+            double[] target = targetBatch.get(i);
+
+            for (int j = 0; j < target.length; j++) {
+                double error = target[j] - prediction[j];
+                totalSquaredError += error * error;
+            }
+        }
+
+        return totalSquaredError / totalSamples;
     }
 
     public void saveModel(BiConsumer<List<double[][]>, List<double[][]>> biConsumer) {
@@ -160,5 +195,39 @@ public class SimpleMLPBatch {
         }
 
         biConsumer.accept(weightsList, biasesList);
+    }
+
+    public record Layer(ActivationFunction activationFunction, int size) {
+
+    }
+
+    public static Layer layer(ActivationFunction activationFunction, int size) {
+        return new Layer(activationFunction, size);
+    }
+
+    private static Layer[] of(int[] layerSizes) {
+        final Layer[] layers = new Layer[layerSizes.length];
+        for (int i = 0; i < layerSizes.length; i++) {
+            int layerSize = layerSizes[i];
+            layers[i] = layer(ACTIVATION_FUNCTION, layerSize);
+        }
+        return layers;
+    }
+
+    private static ActivationFunction[] functions(Layer[] layers) {
+        final ActivationFunction[] functions = new ActivationFunction[layers.length];
+        for (int i = 0; i < layers.length; i++) {
+            functions[i] = layers[i].activationFunction();
+        }
+        return functions;
+    }
+
+    private static int[] layerSizes(List<double[][]> weightsList) {
+        int[] layerSizes = new int[weightsList.size() + 1];
+        for (int i = 0; i < weightsList.size(); i++) {
+            layerSizes[i] = weightsList.get(i)[0].length;
+            layerSizes[i + 1] = weightsList.get(i).length;
+        }
+        return layerSizes;
     }
 }

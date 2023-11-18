@@ -21,6 +21,10 @@ public interface ActivationFunction {
     static ActivationFunction ReLU() {
         return new ReLU();
     }
+    
+    static ActivationFunction linear() {
+        return new Linear();
+    }
 
     static class Sigmoid implements ActivationFunction {
 
@@ -79,4 +83,18 @@ public interface ActivationFunction {
         }
 
     }
+    
+    static class Linear implements ActivationFunction {
+
+        @Override
+        public double function(double x) {
+            return x;
+        }
+
+        @Override
+        public double functionDerivative(double x) {
+            return 1;
+        }
+
+    }    
 }
