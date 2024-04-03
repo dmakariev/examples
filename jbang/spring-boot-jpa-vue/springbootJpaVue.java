@@ -1,6 +1,6 @@
 //usr/bin/env jbang "$0" "$@" ; exit $?
-//JAVA 21
-//DEPS org.springframework.boot:spring-boot-dependencies:3.1.4@pom
+//JAVA 22
+//DEPS org.springframework.boot:spring-boot-dependencies:3.3.0-M3@pom
 //DEPS org.springframework.boot:spring-boot-starter-web
 //DEPS org.springframework.boot:spring-boot-starter-data-jpa
 //DEPS org.springframework.boot:spring-boot-starter-actuator
@@ -8,11 +8,15 @@
 //DEPS org.postgresql:postgresql
 //DEPS org.projectlombok:lombok
 //DEPS org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0
+//DEPS org.slf4j:slf4j-simple
+//2.0.9
 //JAVA_OPTIONS -Dserver.port=8080
 //JAVA_OPTIONS -Dspring.datasource.url=jdbc:h2:mem:person-db;MODE=PostgreSQL;
 //JAVA_OPTIONS -Dspring.h2.console.enabled=true -Dspring.h2.console.settings.web-allow-others=true
 //JAVA_OPTIONS -Dmanagement.endpoints.web.exposure.include=health,env,loggers
 //FILES META-INF/resources/index.html=index-fetch.html
+
+//REPOS mavencentral,sb_snapshot=https://repo.spring.io/snapshot,sb_milestone=https://repo.spring.io/milestone
 package com.makariev.examples.jbang;
 
 import org.springframework.boot.SpringApplication;
@@ -40,6 +44,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.domain.Page;
@@ -54,7 +59,14 @@ import org.springframework.stereotype.Component;
 public class springbootJpaVue {
 
     public static void main(String[] args) {
-        SpringApplication.run(springbootJpaVue.class, args);
+        System.out.println("Hello native!");
+        try {
+
+            SpringApplication.run(springbootJpaVue.class, args);
+        } catch (Exception e) {
+            System.out.println("catchhhh e:" + e.toString());
+        }
+        System.out.println("Bye-bye native!");
     }
 
 }
@@ -82,6 +94,7 @@ class InitialRecords {
     }
 }
 
+@Slf4j
 @RestController
 class HiController {
 
