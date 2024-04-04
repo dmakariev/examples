@@ -1,15 +1,15 @@
 //usr/bin/env jbang "$0" "$@" ; exit $?
 //JAVA 22
-//DEPS org.springframework.boot:spring-boot-dependencies:3.3.0-M3@pom
+//DEPS org.springframework.boot:spring-boot-dependencies:3.2.4@pom
 //DEPS org.springframework.boot:spring-boot-starter-web
 //DEPS org.springframework.boot:spring-boot-starter-data-jpa
 //DEPS org.springframework.boot:spring-boot-starter-actuator
 //DEPS com.h2database:h2
 //DEPS org.postgresql:postgresql
 //DEPS org.projectlombok:lombok
-//DEPS org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0
+//DEPS org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0
 //DEPS org.slf4j:slf4j-simple
-//2.0.9
+
 //JAVA_OPTIONS -Dserver.port=8080
 //JAVA_OPTIONS -Dspring.datasource.url=jdbc:h2:mem:person-db;MODE=PostgreSQL;
 //JAVA_OPTIONS -Dspring.h2.console.enabled=true -Dspring.h2.console.settings.web-allow-others=true
@@ -59,14 +59,7 @@ import org.springframework.stereotype.Component;
 public class springbootJpaVue {
 
     public static void main(String[] args) {
-        System.out.println("Hello native!");
-        try {
-
-            SpringApplication.run(springbootJpaVue.class, args);
-        } catch (Exception e) {
-            System.out.println("catchhhh e:" + e.toString());
-        }
-        System.out.println("Bye-bye native!");
+        SpringApplication.run(springbootJpaVue.class, args);
     }
 
 }

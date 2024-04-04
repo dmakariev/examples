@@ -1,4 +1,4 @@
-FROM public.ecr.aws/docker/library/amazoncorretto:21-alpine AS build
+FROM public.ecr.aws/docker/library/amazoncorretto:22-alpine AS build
 
 RUN apk --no-cache add bash
 RUN apk --no-cache add curl
@@ -8,7 +8,7 @@ COPY . /app
 
 RUN curl -Ls https://sh.jbang.dev | bash -s - export portable springbootJpaVue.java
 
-FROM public.ecr.aws/docker/library/amazoncorretto:21-alpine
+FROM public.ecr.aws/docker/library/amazoncorretto:22-alpine
 RUN mkdir /app/
 RUN mkdir /app/lib
 COPY --from=build /app/springbootJpaVue.jar /app/springbootJpaVue.jar
