@@ -10,6 +10,8 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/bookstore
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=bookstore
+      - SPRING_H2_CONSOLE_ENABLED=false
+      - SPRING_SQL_INIT_PLATFORM=postgresql
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     networks:
       - bookstore-spring-postgres

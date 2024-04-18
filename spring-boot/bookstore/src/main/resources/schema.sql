@@ -1,11 +1,11 @@
 -- Create Authors Table
-CREATE TABLE authors (
+CREATE TABLE if not exists authors (
     id BIGSERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL UNIQUE
 );
 
 -- Create Books Table
-CREATE TABLE books (
+CREATE TABLE if not exists books (
     id BIGSERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     author_id BIGINT NOT NULL,
@@ -15,7 +15,7 @@ CREATE TABLE books (
 );
 
 -- Create Users Table
-CREATE TABLE users (
+CREATE TABLE if not exists users (
     id BIGSERIAL PRIMARY KEY,
     username VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
@@ -23,7 +23,7 @@ CREATE TABLE users (
 );
 
 -- Create Customers Table
-CREATE TABLE customers (
+CREATE TABLE if not exists customers (
     id BIGINT PRIMARY KEY,
     registration_date DATE NOT NULL,
     loyalty_points INTEGER DEFAULT 0,
@@ -31,7 +31,7 @@ CREATE TABLE customers (
 );
 
 -- Create Orders Table
-CREATE TABLE orders (
+CREATE TABLE if not exists orders (
     id BIGSERIAL PRIMARY KEY,
     customer_id BIGINT NOT NULL,
     order_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -40,7 +40,7 @@ CREATE TABLE orders (
 );
 
 -- Create Order Items Table
-CREATE TABLE order_items (
+CREATE TABLE if not exists order_items (
     id BIGSERIAL PRIMARY KEY,
     order_id BIGINT NOT NULL,
     book_id BIGINT NOT NULL,
