@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
 import static org.hamcrest.Matchers.is;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -25,6 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author dmakariev
  */
 @SpringBootTest
+@ActiveProfiles("integration-test")
 @AutoConfigureMockMvc
 @Transactional
 public class BookControllerIT {

@@ -10,12 +10,14 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import org.springframework.test.context.ActiveProfiles;
 
 /**
  *
  * @author dmakariev
  */
 @DataJpaTest
+@ActiveProfiles("test")
 public class InventoryRepositoryTest {
 
     @Autowired

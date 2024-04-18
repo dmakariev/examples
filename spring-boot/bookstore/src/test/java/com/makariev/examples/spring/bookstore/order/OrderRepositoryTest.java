@@ -14,12 +14,14 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import org.springframework.test.context.ActiveProfiles;
 
 /**
  *
  * @author dmakariev
  */
 @DataJpaTest
+@ActiveProfiles("test")
 public class OrderRepositoryTest {
 
     @Autowired

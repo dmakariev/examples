@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import org.springframework.test.context.ActiveProfiles;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -33,6 +34,7 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
  * @author dmakariev
  */
 @SpringBootTest
+@ActiveProfiles("integration-test")
 @AutoConfigureMockMvc
 @Transactional
 public class OrderControllerIT {

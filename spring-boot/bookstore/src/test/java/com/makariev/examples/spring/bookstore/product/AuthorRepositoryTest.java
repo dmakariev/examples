@@ -10,12 +10,14 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import org.springframework.test.context.ActiveProfiles;
 
 /**
  *
  * @author dmakariev
  */
 @DataJpaTest
+@ActiveProfiles("test")
 public class AuthorRepositoryTest {
 
     @Autowired
