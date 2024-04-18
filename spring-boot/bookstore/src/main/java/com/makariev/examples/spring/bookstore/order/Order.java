@@ -1,5 +1,7 @@
 package com.makariev.examples.spring.bookstore.order;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.makariev.examples.spring.bookstore.user.User;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -37,6 +39,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 @ToString(exclude = "orderItems")
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
 public class Order {
 
     @Id
