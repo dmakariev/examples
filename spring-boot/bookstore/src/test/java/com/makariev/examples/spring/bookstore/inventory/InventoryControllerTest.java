@@ -1,6 +1,8 @@
 package com.makariev.examples.spring.bookstore.inventory;
 
 import com.makariev.examples.spring.bookstore.product.Book;
+import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,6 +41,17 @@ public class InventoryControllerTest {
         inventory.setId(1L);
         inventory.setBook(new Book()); // Assuming there's a constructor or setter to set up a Book
         inventory.setQuantity(100);
+    }
+
+    @Test
+    void getAllInventories_ShouldReturnAllInventories() throws Exception {
+        List<Inventory> inventories = Arrays.asList(inventory);
+        given(inventoryService.findAll()).willReturn(inventories);
+
+        mockMvc.perform(get("/api/inventory"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(inventory.getId()))
+                .andExpect(jsonPath("$[0].quantity").value(inventory.getQuantity()));
     }
 
     @Test

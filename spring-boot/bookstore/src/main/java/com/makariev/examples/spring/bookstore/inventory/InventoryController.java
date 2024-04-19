@@ -1,5 +1,6 @@
 package com.makariev.examples.spring.bookstore.inventory;
 
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +21,12 @@ public class InventoryController {
 
     public InventoryController(InventoryService inventoryService) {
         this.inventoryService = inventoryService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Inventory>> getAllInventories() {
+        List<Inventory> inventories = inventoryService.findAll();
+        return ResponseEntity.ok(inventories);
     }
 
     @GetMapping("/{inventoryId}")

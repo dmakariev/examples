@@ -1,6 +1,8 @@
 package com.makariev.examples.spring.bookstore.inventory;
 
 import com.makariev.examples.spring.bookstore.product.Book;
+import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,6 +37,17 @@ public class InventoryServiceTest {
         inventory.setId(1L);
         inventory.setBook(new Book()); // Assume Book setup
         inventory.setQuantity(100);
+    }
+    
+    @Test
+    void findAllInventories_ShouldReturnAllInventories() {
+        List<Inventory> expectedInventories = Arrays.asList(inventory);
+        given(inventoryRepository.findAll()).willReturn(expectedInventories);
+
+        List<Inventory> inventories = inventoryService.findAll();
+
+        assertThat(inventories).hasSize(1);
+        assertThat(inventories.get(0)).isEqualTo(inventory);
     }
 
     @Test

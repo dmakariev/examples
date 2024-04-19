@@ -40,7 +40,6 @@ SELECT * FROM (VALUES
 ) AS tmp(customer_id, order_date, total_price)
 WHERE NOT EXISTS (SELECT 1 FROM orders);
 
-
 -- Populate Order Items if table is empty
 INSERT INTO order_items (order_id, book_id, quantity, price)
 SELECT * FROM (VALUES 
@@ -49,3 +48,12 @@ SELECT * FROM (VALUES
     (2, 3, 1, 25.00)
 ) AS tmp(order_id, book_id, quantity, price)
 WHERE NOT EXISTS (SELECT 1 FROM order_items);
+
+-- Populate Inventory if table is empty
+INSERT INTO inventory (book_id, quantity)
+SELECT * FROM (VALUES 
+    (1, 120),  -- Assuming book_id 1 is 'Harry Potter and the Sorcerer's Stone'
+    (2, 85),   -- Assuming book_id 2 is 'A Game of Thrones'
+    (3, 150)   -- Assuming book_id 3 is 'The Lord of the Rings'
+) AS tmp(book_id, quantity)
+WHERE NOT EXISTS (SELECT 1 FROM inventory);

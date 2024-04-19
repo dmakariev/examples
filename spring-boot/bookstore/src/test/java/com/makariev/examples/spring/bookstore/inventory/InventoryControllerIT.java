@@ -20,7 +20,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-
 /**
  *
  * @author dmakariev
@@ -71,6 +70,14 @@ public class InventoryControllerIT {
         inventory.setBook(book);
         inventory.setQuantity(100);
         inventoryRepository.save(inventory);
+    }
+
+    @Test
+    void getAllInventories_ShouldReturnAllInventories() throws Exception {
+        mockMvc.perform(get("/api/inventory"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].quantity").value(100));
     }
 
     @Test

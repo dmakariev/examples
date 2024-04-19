@@ -14,6 +14,14 @@ CREATE TABLE if not exists books (
     FOREIGN KEY (author_id) REFERENCES authors(id)
 );
 
+-- Create Inventory Table
+CREATE TABLE if not exists inventory (
+    id BIGSERIAL PRIMARY KEY,
+    book_id BIGINT NOT NULL UNIQUE,
+    quantity INTEGER NOT NULL,
+    FOREIGN KEY (book_id) REFERENCES books(id)
+);
+
 -- Create Users Table
 CREATE TABLE if not exists users (
     id BIGSERIAL PRIMARY KEY,

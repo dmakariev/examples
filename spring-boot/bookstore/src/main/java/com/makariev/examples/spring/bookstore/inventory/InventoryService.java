@@ -1,12 +1,13 @@
 package com.makariev.examples.spring.bookstore.inventory;
 
+import java.util.List;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 /**
  *
  * @author dmakariev
  */
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 @Service
 public class InventoryService {
 
@@ -14,6 +15,10 @@ public class InventoryService {
 
     public InventoryService(InventoryRepository inventoryRepository) {
         this.inventoryRepository = inventoryRepository;
+    }
+
+    public List<Inventory> findAll() {
+        return inventoryRepository.findAll();
     }
 
     public Inventory findInventoryById(Long inventoryId) {
