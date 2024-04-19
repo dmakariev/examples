@@ -1,0 +1,31 @@
+= Bookstore Documentation
+:modulith-docs: ../../../target/spring-modulith-docs
+
+== Overview
+
+plantuml::{modulith-docs}/components.puml[format="svg"]
+
+== Inventory
+
+plantuml::{modulith-docs}/module-inventory.puml[format="svg"]
+include::{modulith-docs}/module-inventory.adoc[]
+
+== Notification
+
+plantuml::{modulith-docs}/module-notification.puml[format="svg"]
+include::{modulith-docs}/module-notification.adoc[]
+
+== Orders
+
+plantuml::{modulith-docs}/module-order.puml[format="svg"]
+include::{modulith-docs}/module-order.adoc[]
+
+== Product
+
+plantuml::{modulith-docs}/module-product.puml[format="svg"]
+include::{modulith-docs}/module-product.adoc[]
+
+== User
+
+plantuml::{modulith-docs}/module-user.puml[format="svg"]
+include::{modulith-docs}/module-user.adoc[]
