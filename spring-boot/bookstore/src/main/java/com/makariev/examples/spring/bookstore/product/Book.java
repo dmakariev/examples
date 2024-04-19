@@ -1,7 +1,5 @@
 package com.makariev.examples.spring.bookstore.product;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -31,8 +29,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 @ToString
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
 public class Book {
 
     @Id
@@ -51,4 +47,11 @@ public class Book {
 
     @Column(name = "price", nullable = false)
     private BigDecimal price;
+
+    public Book(String title, String isbn, BigDecimal price) {
+        this.title = title;
+        this.isbn = isbn;
+        this.price = price;
+    }
+
 }

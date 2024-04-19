@@ -1,6 +1,7 @@
 package com.makariev.examples.spring.bookstore.product;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.math.BigDecimal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,7 +13,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
@@ -69,6 +72,31 @@ public class AuthorControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value(sampleAuthor.getName()));
+    }
+
+    @Test
+    void getBooksByAuthorId() throws Exception {
+        // Setup sample books for the author
+        Book book1 = new Book("A Game of Thrones", "1234567890", new BigDecimal("19.99"));
+        Book book2 = new Book("A Clash of Kings", "0987654321", new BigDecimal("15.99"));
+        book1.setId(1L);
+        book2.setId(2L);
+
+        List<Book> books = Arrays.asList(book1, book2);
+
+        final Author authorWithBooks = new Author("John Doe");
+        authorWithBooks.getBooks().addAll(books);
+
+        // Mock the userService to return these books for the given author ID
+        given(userService.findAuthorById(1L)).willReturn(Optional.of(authorWithBooks));
+
+        // Perform the GET request to fetch books by author ID
+        mockMvc.perform(get("/api/authors/{id}/books", 1)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2))) // Checks that two books are returned
+                .andExpect(jsonPath("$[0].title").value("A Game of Thrones"))
+                .andExpect(jsonPath("$[1].title").value("A Clash of Kings"));
     }
 
     @Test
