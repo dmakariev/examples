@@ -13,6 +13,9 @@ services:
       - SPRING_H2_CONSOLE_ENABLED=false
       - SPRING_SQL_INIT_PLATFORM=postgresql
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - MANAGEMENT_TRACING_SAMPLING_PROBABILITY=1.0
+      - MANAGEMENT_TRACING_ENABLED=true
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://zipkin:9411/api/v2/spans
     networks:
       - bookstore-spring-postgres
   db:
@@ -41,7 +44,15 @@ services:
       - "5050:80"
     networks:
       - bookstore-spring-postgres
-    restart: always      
+    restart: always
+  zipkin:
+    container_name: zipkin
+    image: openzipkin/zipkin
+    extra_hosts: [ 'host.docker.internal:host-gateway' ]
+    ports:
+      - "9411:9411"
+    networks:
+      - bookstore-spring-postgres  
 volumes:
   bookstore-db-data:
   bookstore-pgadmin:
