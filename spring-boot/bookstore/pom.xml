@@ -41,6 +41,7 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         
+        <!-- -->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
@@ -58,17 +59,13 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.modulith</groupId>
-            <artifactId>spring-modulith-actuator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.modulith</groupId>
             <artifactId>spring-modulith-docs</artifactId>
         </dependency>
         
         <!-- -->
         <dependency>
             <groupId>org.springframework.modulith</groupId>
-            <artifactId>spring-modulith-observability</artifactId>
+            <artifactId>spring-modulith-starter-insight</artifactId>
             <scope>runtime</scope>
         </dependency>
         <dependency>
