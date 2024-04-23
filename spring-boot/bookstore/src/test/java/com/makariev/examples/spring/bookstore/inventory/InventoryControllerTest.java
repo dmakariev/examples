@@ -45,7 +45,7 @@ public class InventoryControllerTest {
 
     @Test
     void getAllInventories_ShouldReturnAllInventories() throws Exception {
-        List<Inventory> inventories = Arrays.asList(inventory);
+        final List<Inventory> inventories = Arrays.asList(inventory);
         given(inventoryService.findAll()).willReturn(inventories);
 
         mockMvc.perform(get("/api/inventory"))
@@ -67,7 +67,7 @@ public class InventoryControllerTest {
     @Test
     void addStock_ShouldUpdateInventory() throws Exception {
         // Setup the expected behavior for adding stock
-        Inventory updatedInventory = new Inventory(inventory.getId(), inventory.getBook(), inventory.getQuantity() + 10);
+        final Inventory updatedInventory = new Inventory(inventory.getId(), inventory.getBook(), inventory.getQuantity() + 10);
         given(inventoryService.addStock(1L, 10)).willReturn(updatedInventory);
 
         mockMvc.perform(post("/api/inventory/{inventoryId}/add", 1)
@@ -79,7 +79,7 @@ public class InventoryControllerTest {
     @Test
     void removeStock_ShouldUpdateInventory() throws Exception {
         // Setup the expected behavior for removing stock
-        Inventory updatedInventory = new Inventory(inventory.getId(), inventory.getBook(), inventory.getQuantity() - 5);
+        final Inventory updatedInventory = new Inventory(inventory.getId(), inventory.getBook(), inventory.getQuantity() - 5);
         given(inventoryService.removeStock(1L, 5)).willReturn(updatedInventory);
 
         mockMvc.perform(post("/api/inventory/{inventoryId}/remove", 1)

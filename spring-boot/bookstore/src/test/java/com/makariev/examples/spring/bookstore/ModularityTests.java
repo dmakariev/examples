@@ -10,7 +10,7 @@ import org.springframework.modulith.docs.Documenter;
  */
 public class ModularityTests {
 
-    ApplicationModules modules = ApplicationModules.of(BookstoreApplication.class);
+    private final ApplicationModules modules = ApplicationModules.of(BookstoreApplication.class);
 
     @Test
     void verifiesModularStructure() {

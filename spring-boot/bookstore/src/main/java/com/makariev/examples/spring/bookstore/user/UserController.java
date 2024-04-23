@@ -28,7 +28,7 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.findAllUsers();
+        final List<User> users = userService.findAllUsers();
         return ResponseEntity.ok(users);
     }
 
@@ -41,14 +41,14 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user) {
-        User savedUser = userService.saveUser(user);
+        final User savedUser = userService.saveUser(user);
         return ResponseEntity.ok(savedUser);
     }
 
     @PutMapping("/{userId}")
     public ResponseEntity<User> updateUser(@PathVariable Long userId, @RequestBody User user) {
         user.setId(userId);
-        User updatedUser = userService.saveUser(user);
+        final User updatedUser = userService.saveUser(user);
         return ResponseEntity.ok(updatedUser);
     }
 

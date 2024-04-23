@@ -20,9 +20,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.BDDMockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 /**
  *
@@ -45,7 +52,7 @@ public class OrderControllerTest {
 
     @BeforeEach
     void setUp() {
-        User customer = new User();  // Assuming User has a default constructor
+        final User customer = new User();  // Assuming User has a default constructor
         customer.setId(1L);
 
         order = new Order();
@@ -58,7 +65,7 @@ public class OrderControllerTest {
 
     @Test
     void getAllOrders_ShouldReturnAllOrders() throws Exception {
-        List<Order> orders = Arrays.asList(order);
+        final List<Order> orders = Arrays.asList(order);
         given(orderService.findAllOrders()).willReturn(orders);
 
         mockMvc.perform(get("/api/orders"))
@@ -99,7 +106,7 @@ public class OrderControllerTest {
 
     @Test
     void addOrderItem_ShouldAddOrderItem() throws Exception {
-        OrderItem orderItem = new OrderItem();
+        final OrderItem orderItem = new OrderItem();
         orderItem.setId(1L);
         orderItem.setOrder(order);
         orderItem.setBook(new Book()); // Assuming Book has a default constructor

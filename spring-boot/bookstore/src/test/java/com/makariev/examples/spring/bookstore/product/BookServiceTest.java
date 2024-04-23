@@ -45,12 +45,12 @@ public class BookServiceTest {
 
     @Test
     void findAllBookSummaries_ReturnsListOfSummaries() {
-        BookSummary summary = new BookSummary("Effective Java", "Joshua Bloch", 40.00);
-        List<BookSummary> summaries = Arrays.asList(summary);
+        final BookSummary summary = new BookSummary("Effective Java", "Joshua Bloch", 40.00);
+        final List<BookSummary> summaries = Arrays.asList(summary);
 
         given(bookRepository.findAllBookSummaries()).willReturn(summaries);
 
-        List<BookSummary> fetchedSummaries = bookService.findAllBookSummaries();
+        final List<BookSummary> fetchedSummaries = bookService.findAllBookSummaries();
 
         assertThat(fetchedSummaries).isNotNull();
         assertThat(fetchedSummaries).hasSize(1);
@@ -61,7 +61,7 @@ public class BookServiceTest {
     void findBookById_ReturnsBook() {
         given(bookRepository.findById(1L)).willReturn(Optional.of(book));
 
-        Optional<Book> foundBook = bookService.findBookById(1L);
+        final Optional<Book> foundBook = bookService.findBookById(1L);
 
         assertThat(foundBook).isPresent();
         assertThat(foundBook.get().getTitle()).isEqualTo("Effective Java");
@@ -71,7 +71,7 @@ public class BookServiceTest {
     void saveBook_SavesAndReturnsBook() {
         given(bookRepository.save(any(Book.class))).willReturn(book);
 
-        Book savedBook = bookService.saveBook(book);
+        final Book savedBook = bookService.saveBook(book);
 
         assertThat(savedBook).isNotNull();
         assertThat(savedBook.getTitle()).isEqualTo("Effective Java");
@@ -88,13 +88,13 @@ public class BookServiceTest {
 
     @Test
     void updateBook_UpdatesAndReturnsUpdatedBook() {
-        Book updatedBook = new Book();
+        final Book updatedBook = new Book();
         updatedBook.setTitle("Effective Java 2nd Edition");
 
         given(bookRepository.findById(1L)).willReturn(Optional.of(book));
         given(bookRepository.save(book)).willReturn(book);
 
-        Book result = bookService.updateBook(1L, updatedBook);
+        final Book result = bookService.updateBook(1L, updatedBook);
 
         assertThat(result).isNotNull();
         assertThat(result.getTitle()).isEqualTo("Effective Java 2nd Edition");

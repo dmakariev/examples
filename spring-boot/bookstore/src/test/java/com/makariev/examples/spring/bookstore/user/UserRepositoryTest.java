@@ -29,12 +29,12 @@ public class UserRepositoryTest {
     @Test
     public void whenSaveUser_thenRetrieveUser() {
         // Given
-        User user = new User("johnDoe", "securePassword", "john.doe@example.com");
+        final User user = new User("johnDoe", "securePassword", "john.doe@example.com");
         entityManager.persist(user);
         entityManager.flush();
 
         // When
-        Optional<User> found = userRepository.findById(user.getId());
+        final Optional<User> found = userRepository.findById(user.getId());
 
         // Then
         assertThat(found.isPresent()).isTrue();
@@ -44,12 +44,12 @@ public class UserRepositoryTest {
     @Test
     public void whenSaveCustomer_thenRetrieveCustomer() {
         // Given
-        Customer customer = new Customer("aliceSmith", "securePassword123", "alice.smith@example.com", new Date());
+        final Customer customer = new Customer("aliceSmith", "securePassword123", "alice.smith@example.com", new Date());
         entityManager.persist(customer);
         entityManager.flush();
 
         // When
-        Optional<User> found = userRepository.findById(customer.getId());
+        final Optional<User> found = userRepository.findById(customer.getId());
 
         // Then
         assertThat(found.isPresent()).isTrue();
@@ -60,14 +60,14 @@ public class UserRepositoryTest {
     @Test
     public void findAllUsers_ShouldReturnAllUsersIncludingCustomers() {
         // Given
-        User user = new User("janeDoe", "password", "jane.doe@example.com");
-        Customer customer = new Customer("bobSmith", "password123", "bob.smith@example.com", new Date());
+        final User user = new User("janeDoe", "password", "jane.doe@example.com");
+        final Customer customer = new Customer("bobSmith", "password123", "bob.smith@example.com", new Date());
         entityManager.persist(user);
         entityManager.persist(customer);
         entityManager.flush();
 
         // When
-        List<User> users = userRepository.findAll();
+        final List<User> users = userRepository.findAll();
 
         // Then
         assertThat(users).hasSize(2);
@@ -77,13 +77,13 @@ public class UserRepositoryTest {
     @Test
     public void deleteUserById_ShouldRemoveUser() {
         // Given
-        User user = new User("charlie", "password", "charlie@example.com");
+        final User user = new User("charlie", "password", "charlie@example.com");
         entityManager.persist(user);
         entityManager.flush();
 
         // When
         userRepository.deleteById(user.getId());
-        Optional<User> found = userRepository.findById(user.getId());
+        final Optional<User> found = userRepository.findById(user.getId());
 
         // Then
         assertThat(found).isNotPresent();

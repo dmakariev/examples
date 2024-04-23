@@ -56,7 +56,7 @@ public class OrderControllerIT {
 
     @BeforeEach
     void setUp() {
-        TransactionStatus txStatus = transactionManager.getTransaction(new DefaultTransactionDefinition());
+        final TransactionStatus txStatus = transactionManager.getTransaction(new DefaultTransactionDefinition());
         try {
             entityManager.createQuery("DELETE FROM OrderItem").executeUpdate();
             entityManager.createQuery("DELETE FROM Order").executeUpdate();
@@ -74,10 +74,10 @@ public class OrderControllerIT {
     private void setupEntities() {
 
         // Set up Author and Book
-        Author author = new Author("John Tolkien");
+        final Author author = new Author("John Tolkien");
         entityManager.persist(author);
 
-        Book book = new Book();
+        final Book book = new Book();
         book.setTitle("The Lord of the Rings");
         book.setIsbn("1234567890");
         book.setPrice(new BigDecimal("29.99"));
@@ -85,15 +85,15 @@ public class OrderControllerIT {
         entityManager.persist(book);
 
         // Set up User and Order
-        Customer customer = new Customer("john_doe", "password123", "john.doe@example.com", new Date());
+        final Customer customer = new Customer("john_doe", "password123", "john.doe@example.com", new Date());
         entityManager.persist(customer);
 
-        Order order = new Order();
+        final Order order = new Order();
         order.setCustomer(customer);
         order.setOrderDate(new Date());
         order.setTotalPrice(new BigDecimal("29.99"));
 
-        OrderItem orderItem = new OrderItem();
+        final OrderItem orderItem = new OrderItem();
         orderItem.setBook(book);
         orderItem.setQuantity(1);
         orderItem.setPrice(book.getPrice());
@@ -114,7 +114,7 @@ public class OrderControllerIT {
 
     @Test
     void getOrderById_ShouldReturnOrder() throws Exception {
-        Order order = orderRepository.findAll().get(0);
+        final Order order = orderRepository.findAll().get(0);
 
         mockMvc.perform(get("/api/orders/{orderId}", order.getId()))
                 .andExpect(status().isOk())
@@ -123,7 +123,7 @@ public class OrderControllerIT {
 
     @Test
     void createOrder_ShouldCreateOrder() throws Exception {
-        Order newOrder = new Order();
+        final Order newOrder = new Order();
         newOrder.setCustomer(orderRepository.findAll().get(0).getCustomer());
         newOrder.setOrderDate(new Date());
         newOrder.setTotalPrice(new BigDecimal("200.00"));
@@ -137,7 +137,7 @@ public class OrderControllerIT {
 
     @Test
     void updateOrder_ShouldUpdateOrder() throws Exception {
-        Order existingOrder = orderRepository.findAll().get(0);
+        final Order existingOrder = orderRepository.findAll().get(0);
         existingOrder.setTotalPrice(new BigDecimal("500.00"));
 
         mockMvc.perform(put("/api/orders/{orderId}", existingOrder.getId())
@@ -149,7 +149,7 @@ public class OrderControllerIT {
 
     @Test
     void deleteOrder_ShouldRemoveOrder() throws Exception {
-        Order existingOrder = orderRepository.findAll().get(0);
+        final Order existingOrder = orderRepository.findAll().get(0);
 
         mockMvc.perform(delete("/api/orders/{orderId}", existingOrder.getId()))
                 .andExpect(status().isOk());

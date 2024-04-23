@@ -37,9 +37,9 @@ public class UserControllerTest {
 
     @Test
     public void getAllUsers_ShouldReturnAllUsers() throws Exception {
-        User user1 = new User(1L, "user1", "password1", "user1@example.com");
-        User user2 = new User(2L, "user2", "password2", "user2@example.com");
-        List<User> users = Arrays.asList(user1, user2);
+        final User user1 = new User(1L, "user1", "password1", "user1@example.com");
+        final User user2 = new User(2L, "user2", "password2", "user2@example.com");
+        final List<User> users = Arrays.asList(user1, user2);
 
         given(userService.findAllUsers()).willReturn(users);
 
@@ -52,8 +52,8 @@ public class UserControllerTest {
 
     @Test
     public void getUserById_WhenUserExists_ShouldReturnUser() throws Exception {
-        Long userId = 1L;
-        User user = new User(userId, "user1", "password1", "user1@example.com");
+        final Long userId = 1L;
+        final User user = new User(userId, "user1", "password1", "user1@example.com");
 
         given(userService.findUserById(userId)).willReturn(Optional.of(user));
 
@@ -65,7 +65,7 @@ public class UserControllerTest {
 
     @Test
     public void getUserById_WhenUserDoesNotExist_ShouldReturnNotFound() throws Exception {
-        Long userId = 1L;
+        final Long userId = 1L;
         given(userService.findUserById(userId)).willReturn(Optional.empty());
 
         mockMvc.perform(get("/api/users/{userId}", userId))
@@ -74,8 +74,8 @@ public class UserControllerTest {
 
     @Test
     public void createUser_ShouldCreateUserAndReturn() throws Exception {
-        User newUser = new User(null, "newUser", "newPass", "newuser@example.com");
-        User savedUser = new User(1L, "newUser", "newPass", "newuser@example.com");
+        final User newUser = new User(null, "newUser", "newPass", "newuser@example.com");
+        final User savedUser = new User(1L, "newUser", "newPass", "newuser@example.com");
 
         given(userService.saveUser(newUser)).willReturn(savedUser);
 
@@ -88,8 +88,8 @@ public class UserControllerTest {
 
     @Test
     public void updateUser_WhenUserExists_ShouldUpdateAndReturn() throws Exception {
-        Long userId = 1L;
-        User user = new User(userId, "updatedUser", "updatedPass", "updated@example.com");
+        final Long userId = 1L;
+        final User user = new User(userId, "updatedUser", "updatedPass", "updated@example.com");
 
         given(userService.saveUser(user)).willReturn(user);
 
@@ -103,7 +103,7 @@ public class UserControllerTest {
 
     @Test
     public void deleteUser_WhenUserExists_ShouldReturnOk() throws Exception {
-        Long userId = 1L;
+        final Long userId = 1L;
         mockMvc.perform(delete("/api/users/{userId}", userId))
                 .andExpect(status().isOk());
     }

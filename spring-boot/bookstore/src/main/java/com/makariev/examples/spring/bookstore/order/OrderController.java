@@ -28,7 +28,7 @@ public class OrderController {
 
     @GetMapping
     public ResponseEntity<List<Order>> getAllOrders() {
-        List<Order> orders = orderService.findAllOrders();
+        final List<Order> orders = orderService.findAllOrders();
         return ResponseEntity.ok(orders);
     }
 
@@ -41,20 +41,20 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<Order> createOrder(@RequestBody Order order) {
-        Order savedOrder = orderService.createOrUpdateOrder(order);
+        final Order savedOrder = orderService.createOrUpdateOrder(order);
         return ResponseEntity.ok(savedOrder);
     }
 
     @PostMapping("/{orderId}/items")
     public ResponseEntity<Order> addOrderItem(@PathVariable Long orderId, @RequestBody OrderItem orderItem) {
-        Order updatedOrder = orderService.addOrderItem(orderId, orderItem);
+        final Order updatedOrder = orderService.addOrderItem(orderId, orderItem);
         return ResponseEntity.ok(updatedOrder);
     }
 
     @PutMapping("/{orderId}")
     public ResponseEntity<Order> updateOrder(@PathVariable Long orderId, @RequestBody Order order) {
         order.setId(orderId); // Ensure the ID is set correctly
-        Order updatedOrder = orderService.createOrUpdateOrder(order);
+        final Order updatedOrder = orderService.createOrUpdateOrder(order);
         return ResponseEntity.ok(updatedOrder);
     }
 

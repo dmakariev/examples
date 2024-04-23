@@ -43,7 +43,7 @@ public class AuthorServiceTest {
     void findAllAuthors_ReturnsListOfAuthors() {
         given(authorRepository.findAll()).willReturn(Arrays.asList(author));
 
-        List<Author> authors = authorService.findAllAuthors();
+        final List<Author> authors = authorService.findAllAuthors();
 
         assertThat(authors).isNotNull();
         assertThat(authors).hasSize(1);
@@ -54,7 +54,7 @@ public class AuthorServiceTest {
     void findAuthorById_ExistingId_ReturnsAuthor() {
         given(authorRepository.findById(1L)).willReturn(Optional.of(author));
 
-        Optional<Author> foundAuthor = authorService.findAuthorById(1L);
+        final Optional<Author> foundAuthor = authorService.findAuthorById(1L);
 
         assertThat(foundAuthor).isPresent();
         assertThat(foundAuthor.get().getName()).isEqualTo("John Doe");
@@ -64,7 +64,7 @@ public class AuthorServiceTest {
     void saveAuthor_SavesAndReturnsAuthor() {
         given(authorRepository.save(any(Author.class))).willReturn(author);
 
-        Author savedAuthor = authorService.saveAuthor(author);
+        final Author savedAuthor = authorService.saveAuthor(author);
 
         assertThat(savedAuthor).isNotNull();
         assertThat(savedAuthor.getName()).isEqualTo("John Doe");
@@ -81,13 +81,13 @@ public class AuthorServiceTest {
 
     @Test
     void updateAuthor_ExistingId_UpdatesAndReturnsAuthor() {
-        Author updatedAuthor = new Author();
+        final Author updatedAuthor = new Author();
         updatedAuthor.setName("Jane Doe");
 
         given(authorRepository.findById(1L)).willReturn(Optional.of(author));
         given(authorRepository.save(author)).willReturn(author);
 
-        Author result = authorService.updateAuthor(1L, updatedAuthor);
+        final Author result = authorService.updateAuthor(1L, updatedAuthor);
 
         assertThat(result).isNotNull();
         assertThat(result.getName()).isEqualTo("Jane Doe");
@@ -95,14 +95,14 @@ public class AuthorServiceTest {
 
     @Test
     void updateAuthor_NonExistingId_CreatesAndReturnsAuthor() {
-        Author newAuthor = new Author();
+        final Author newAuthor = new Author();
         newAuthor.setId(1L);
         newAuthor.setName("New Author");
 
         given(authorRepository.findById(1L)).willReturn(Optional.empty());
         given(authorRepository.save(newAuthor)).willReturn(newAuthor);
 
-        Author result = authorService.updateAuthor(1L, newAuthor);
+        final Author result = authorService.updateAuthor(1L, newAuthor);
 
         assertThat(result).isNotNull();
         assertThat(result.getName()).isEqualTo("New Author");

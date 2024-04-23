@@ -83,7 +83,7 @@ public class BookControllerIT {
 
     @Test
     void createBook_ShouldCreateAndReturnBook() throws Exception {
-        Book newBook = new Book();
+        final Book newBook = new Book();
         newBook.setTitle("Spring in Action");
         newBook.setIsbn("9780326204260");
         newBook.setPrice(new BigDecimal("45.00"));

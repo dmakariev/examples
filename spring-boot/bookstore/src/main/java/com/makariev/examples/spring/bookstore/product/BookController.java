@@ -28,7 +28,7 @@ public class BookController {
 
     @GetMapping("/summaries")
     public ResponseEntity<List<BookSummary>> getAllBookSummaries() {
-        List<BookSummary> bookSummaries = bookService.findAllBookSummaries();
+        final List<BookSummary> bookSummaries = bookService.findAllBookSummaries();
         return ResponseEntity.ok(bookSummaries);
     }
 
@@ -41,13 +41,13 @@ public class BookController {
 
     @PostMapping
     public ResponseEntity<Book> createBook(@RequestBody Book book) {
-        Book savedBook = bookService.saveBook(book);
+        final Book savedBook = bookService.saveBook(book);
         return ResponseEntity.ok(savedBook);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book book) {
-        Book updatedBook = bookService.updateBook(id, book);
+        final Book updatedBook = bookService.updateBook(id, book);
         return ResponseEntity.ok(updatedBook);
     }
 

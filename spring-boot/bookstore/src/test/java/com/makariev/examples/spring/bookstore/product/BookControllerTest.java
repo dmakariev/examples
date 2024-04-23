@@ -61,8 +61,8 @@ public class BookControllerTest {
 
     @Test
     void getAllBookSummaries_ShouldReturnBookSummaries() throws Exception {
-        BookSummary summary = new BookSummary("Effective Java", "Joshua Bloch", 45.00);
-        List<BookSummary> summaries = Arrays.asList(summary);
+        final BookSummary summary = new BookSummary("Effective Java", "Joshua Bloch", 45.00);
+        final List<BookSummary> summaries = Arrays.asList(summary);
 
         given(bookService.findAllBookSummaries()).willReturn(summaries);
 

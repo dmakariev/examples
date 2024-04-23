@@ -40,10 +40,10 @@ public class OrderServiceTest {
 
     @Test
     void findAllOrders_ShouldReturnAllOrders() {
-        List<Order> expectedOrders = Arrays.asList(order);
+        final List<Order> expectedOrders = Arrays.asList(order);
         given(orderRepository.findAll()).willReturn(expectedOrders);
 
-        List<Order> orders = orderService.findAllOrders();
+        final List<Order> orders = orderService.findAllOrders();
 
         assertThat(orders).hasSize(1);
         assertThat(orders.get(0)).isEqualTo(order);
@@ -53,7 +53,7 @@ public class OrderServiceTest {
     void findOrderById_ShouldReturnOrder() {
         given(orderRepository.findById(1L)).willReturn(Optional.of(order));
 
-        Optional<Order> foundOrder = orderService.findOrderById(1L);
+        final Optional<Order> foundOrder = orderService.findOrderById(1L);
 
         assertThat(foundOrder.isPresent()).isTrue();
         assertThat(foundOrder.get()).isEqualTo(order);
@@ -63,7 +63,7 @@ public class OrderServiceTest {
     void createOrUpdateOrder_ShouldSaveOrder() {
         given(orderRepository.save(order)).willReturn(order);
 
-        Order savedOrder = orderService.createOrUpdateOrder(order);
+        final Order savedOrder = orderService.createOrUpdateOrder(order);
 
         assertThat(savedOrder).isNotNull();
         assertThat(savedOrder).isEqualTo(order);
@@ -71,14 +71,14 @@ public class OrderServiceTest {
 
     @Test
     void addOrderItem_ShouldAddItemToOrder() {
-        OrderItem orderItem = new OrderItem();
+        final OrderItem orderItem = new OrderItem();
         orderItem.setId(2L);
         // Assuming setting up more properties if needed
 
         given(orderRepository.findById(1L)).willReturn(Optional.of(order));
         given(orderRepository.save(order)).willReturn(order);
 
-        Order updatedOrder = orderService.addOrderItem(1L, orderItem);
+        final Order updatedOrder = orderService.addOrderItem(1L, orderItem);
 
         assertThat(updatedOrder.getOrderItems()).contains(orderItem);
     }

@@ -48,7 +48,7 @@ public class UserControllerIT {
     @Test
     void givenExistingUserId_whenGetUserById_thenReturnsUser() throws Exception {
         // Given
-        Long userId = user.getId();
+        final Long userId = user.getId();
 
         // When & Then
         mockMvc.perform(get("/api/users/{userId}", userId)
@@ -63,7 +63,7 @@ public class UserControllerIT {
     @Test
     void givenNonexistentUserId_whenGetUserById_thenReturnsNotFound() throws Exception {
         // Given
-        Long userId = 999L;
+        final Long userId = 999L;
 
         // When & Then
         mockMvc.perform(get("/api/users/{userId}", userId)
@@ -74,7 +74,7 @@ public class UserControllerIT {
     @Test
     void givenValidUser_whenCreateUser_thenReturnsCreatedUser() throws Exception {
         // Given
-        User newUser = new User("janeDoe", "password456", "jane.doe@example.com");
+        final User newUser = new User("janeDoe", "password456", "jane.doe@example.com");
 
         // When & Then
         mockMvc.perform(post("/api/users")
@@ -90,8 +90,8 @@ public class UserControllerIT {
     @Test
     void givenValidUserIdAndUpdatedUser_whenUpdateUser_thenReturnsUpdatedUser() throws Exception {
         // Given
-        Long userId = user.getId();
-        User updatedUser = new User("johnDoeUpdated", "password123Updated", "john.doe@example.com");
+        final Long userId = user.getId();
+        final User updatedUser = new User("johnDoeUpdated", "password123Updated", "john.doe@example.com");
 
         // When & Then
         mockMvc.perform(put("/api/users/{userId}", userId)
@@ -107,7 +107,7 @@ public class UserControllerIT {
     @Test
     void givenExistingUserId_whenDeleteUser_thenReturnsOk() throws Exception {
         // Given
-        Long userId = user.getId();
+        final Long userId = user.getId();
 
         // When & Then
         mockMvc.perform(delete("/api/users/{userId}", userId)

@@ -42,7 +42,7 @@ public class CustomerControllerIT {
     @Test
     void givenExistingCustomerId_whenGetCustomerById_thenReturnsCustomer() throws Exception {
         // Given
-        Long customerId = customer.getId();
+        final Long customerId = customer.getId();
 
         // When & Then
         mockMvc.perform(get("/api/customers/{customerId}", customerId)
@@ -57,7 +57,7 @@ public class CustomerControllerIT {
     @Test
     void givenNonexistentCustomerId_whenGetCustomerById_thenReturnsNotFound() throws Exception {
         // Given
-        Long customerId = 999L;
+        final Long customerId = 999L;
 
         // When & Then
         mockMvc.perform(get("/api/customers/{customerId}", customerId)

@@ -2,6 +2,7 @@ package com.makariev.examples.spring.bookstore.product;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,7 +49,7 @@ public class AuthorControllerIT {
 
     @Test
     void shouldCreateAuthor() throws Exception {
-        Author author = new Author();
+        final Author author = new Author();
         author.setName("John Doe");
 
         mockMvc.perform(post("/api/authors")
@@ -60,9 +61,9 @@ public class AuthorControllerIT {
 
     @Test
     void shouldRetrieveAuthor() throws Exception {
-        Author author = new Author();
+        final Author author = new Author();
         author.setName("John Doe");
-        Author savedAuthor = authorRepository.save(author);
+        final Author savedAuthor = authorRepository.save(author);
 
         mockMvc.perform(get("/api/authors/{id}", savedAuthor.getId())
                 .contentType(MediaType.APPLICATION_JSON))
@@ -73,19 +74,19 @@ public class AuthorControllerIT {
     @Test
     void shouldRetrieveBooksByAuthorId() throws Exception {
         // Create and save an author
-        Author author = new Author();
+        final Author author = new Author();
         author.setName("George R.R. Martin");
-        Author savedAuthor = authorRepository.saveAndFlush(author);
+        final Author savedAuthor = authorRepository.saveAndFlush(author);
 
         // Create and save books for the author
-        Book book1 = new Book();
+        final Book book1 = new Book();
         book1.setTitle("A Game of Thrones");
         book1.setIsbn("1234567890");
         book1.setPrice(new BigDecimal("29.99"));
         book1.setAuthor(savedAuthor);
         bookRepository.saveAndFlush(book1);
 
-        Book book2 = new Book();
+        final Book book2 = new Book();
         book2.setTitle("A Clash of Kings");
         book2.setIsbn("0987654321");
         book2.setPrice(new BigDecimal("25.99"));
@@ -103,11 +104,13 @@ public class AuthorControllerIT {
 
     @Test
     void shouldUpdateAuthor() throws Exception {
-        Author author = new Author();
+        final Author author = new Author();
         author.setName("Initial Name");
-        author = authorRepository.save(author);
+        assertThat(author.getId()).isNull();
+        authorRepository.save(author);
+        assertThat(author.getId()).isNotNull();
 
-        Author updatedInfo = new Author();
+        final Author updatedInfo = new Author();
         updatedInfo.setName("Updated Name");
 
         mockMvc.perform(put("/api/authors/{id}", author.getId())
@@ -119,9 +122,11 @@ public class AuthorControllerIT {
 
     @Test
     void shouldDeleteAuthor() throws Exception {
-        Author author = new Author();
+        final Author author = new Author();
         author.setName("John Doe");
-        author = authorRepository.save(author);
+        assertThat(author.getId()).isNull();
+        authorRepository.save(author);
+        assertThat(author.getId()).isNotNull();
 
         mockMvc.perform(delete("/api/authors/{id}", author.getId())
                 .contentType(MediaType.APPLICATION_JSON))

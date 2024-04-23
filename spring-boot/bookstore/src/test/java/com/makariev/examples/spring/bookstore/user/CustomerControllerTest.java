@@ -33,8 +33,8 @@ public class CustomerControllerTest {
     @Test
     public void getCustomerById_WhenCustomerExists_ShouldReturnCustomer() throws Exception {
         // Given
-        Long customerId = 1L;
-        Customer customer = new Customer();
+        final Long customerId = 1L;
+        final Customer customer = new Customer();
         customer.setId(customerId);
         customer.setUsername("johnDoe");
         customer.setEmail("john.doe@example.com");
@@ -53,7 +53,7 @@ public class CustomerControllerTest {
     @Test
     public void getCustomerById_WhenCustomerDoesNotExist_ShouldReturnNotFound() throws Exception {
         // Given
-        Long customerId = 1L;
+        final Long customerId = 1L;
         given(userService.findCustomerById(customerId)).willReturn(Optional.empty());
 
         // When & Then

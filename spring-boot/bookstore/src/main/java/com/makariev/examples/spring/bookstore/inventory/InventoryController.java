@@ -25,25 +25,25 @@ public class InventoryController {
 
     @GetMapping
     public ResponseEntity<List<Inventory>> getAllInventories() {
-        List<Inventory> inventories = inventoryService.findAll();
+        final List<Inventory> inventories = inventoryService.findAll();
         return ResponseEntity.ok(inventories);
     }
 
     @GetMapping("/{inventoryId}")
     public ResponseEntity<Inventory> getInventory(@PathVariable Long inventoryId) {
-        Inventory inventory = inventoryService.findInventoryById(inventoryId);
+        final Inventory inventory = inventoryService.findInventoryById(inventoryId);
         return ResponseEntity.ok(inventory);
     }
 
     @PostMapping("/{inventoryId}/add")
     public ResponseEntity<Inventory> addStock(@PathVariable Long inventoryId, @RequestParam int quantity) {
-        Inventory updatedInventory = inventoryService.addStock(inventoryId, quantity);
+        final Inventory updatedInventory = inventoryService.addStock(inventoryId, quantity);
         return ResponseEntity.ok(updatedInventory);
     }
 
     @PostMapping("/{inventoryId}/remove")
     public ResponseEntity<Inventory> removeStock(@PathVariable Long inventoryId, @RequestParam int quantity) {
-        Inventory updatedInventory = inventoryService.removeStock(inventoryId, quantity);
+        final Inventory updatedInventory = inventoryService.removeStock(inventoryId, quantity);
         return ResponseEntity.ok(updatedInventory);
     }
 }

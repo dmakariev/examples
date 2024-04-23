@@ -52,10 +52,10 @@ public class InventoryServiceTest {
 
     @Test
     void findAllInventories_ShouldReturnAllInventories() {
-        List<Inventory> expectedInventories = Arrays.asList(inventory);
+        final List<Inventory> expectedInventories = Arrays.asList(inventory);
         given(inventoryRepository.findAll()).willReturn(expectedInventories);
 
-        List<Inventory> inventories = inventoryService.findAll();
+        final List<Inventory> inventories = inventoryService.findAll();
 
         assertThat(inventories).hasSize(1);
         assertThat(inventories.get(0)).isEqualTo(inventory);
@@ -65,7 +65,7 @@ public class InventoryServiceTest {
     void findInventoryById_ShouldReturnInventory() {
         given(inventoryRepository.findById(1L)).willReturn(Optional.of(inventory));
 
-        Inventory found = inventoryService.findInventoryById(1L);
+        final Inventory found = inventoryService.findInventoryById(1L);
 
         assertThat(found).isEqualTo(inventory);
     }
@@ -82,14 +82,14 @@ public class InventoryServiceTest {
         given(inventoryRepository.findById(1L)).willReturn(Optional.of(inventory));
         given(inventoryRepository.save(inventory)).willReturn(inventory);
 
-        Inventory updatedInventory = inventoryService.addStock(1L, 10);
+        final Inventory updatedInventory = inventoryService.addStock(1L, 10);
 
         assertThat(updatedInventory.getQuantity()).isEqualTo(110); // assuming the initial setup is corrected
         verify(applicationEventPublisher, times(1)).publishEvent(new StockAddedEvent(1L, 10));
 
         //use an ArgumentCaptor to capture and assert properties of events:
         verify(applicationEventPublisher).publishEvent(stockAddedEventCaptor.capture());
-        StockAddedEvent capturedEvent = stockAddedEventCaptor.getValue();
+        final StockAddedEvent capturedEvent = stockAddedEventCaptor.getValue();
         assertThat(capturedEvent.inventoryId()).isEqualTo(1L);
         assertThat(capturedEvent.quantityAdded()).isEqualTo(10);
     }
@@ -99,7 +99,7 @@ public class InventoryServiceTest {
         given(inventoryRepository.findById(1L)).willReturn(Optional.of(inventory));
         given(inventoryRepository.save(inventory)).willReturn(inventory);
 
-        Inventory updatedInventory = inventoryService.removeStock(1L, 20);
+        final Inventory updatedInventory = inventoryService.removeStock(1L, 20);
 
         assertThat(updatedInventory.getQuantity()).isEqualTo(80); // assuming the initial setup is corrected
         verify(applicationEventPublisher, times(1)).publishEvent(new StockRemovedEvent(1L, 20));

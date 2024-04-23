@@ -30,7 +30,7 @@ public class AuthorController {
 
     @GetMapping
     public ResponseEntity<List<Author>> getAllAuthors() {
-        List<Author> authors = authorService.findAllAuthors();
+        final List<Author> authors = authorService.findAllAuthors();
         return ResponseEntity.ok(authors);
     }
 
@@ -43,7 +43,7 @@ public class AuthorController {
 
     @GetMapping("/{id}/books")
     public ResponseEntity<List<Book>> getBooksByAuthorId(@PathVariable Long id) {
-        List<Book> books = new ArrayList<>(
+        final List<Book> books = new ArrayList<>(
                 authorService
                         .findAuthorById(id)
                         .map(Author::getBooks)
@@ -57,13 +57,13 @@ public class AuthorController {
 
     @PostMapping
     public ResponseEntity<Author> createAuthor(@RequestBody Author author) {
-        Author savedAuthor = authorService.saveAuthor(author);
+        final Author savedAuthor = authorService.saveAuthor(author);
         return ResponseEntity.ok(savedAuthor);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Author> updateAuthor(@PathVariable Long id, @RequestBody Author author) {
-        Author updatedAuthor = authorService.updateAuthor(id, author);
+        final Author updatedAuthor = authorService.updateAuthor(id, author);
         return ResponseEntity.ok(updatedAuthor);
     }
 

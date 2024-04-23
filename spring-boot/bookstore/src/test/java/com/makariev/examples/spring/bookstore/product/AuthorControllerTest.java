@@ -77,12 +77,12 @@ public class AuthorControllerTest {
     @Test
     void getBooksByAuthorId() throws Exception {
         // Setup sample books for the author
-        Book book1 = new Book("A Game of Thrones", "1234567890", new BigDecimal("19.99"));
-        Book book2 = new Book("A Clash of Kings", "0987654321", new BigDecimal("15.99"));
+        final Book book1 = new Book("A Game of Thrones", "1234567890", new BigDecimal("19.99"));
+        final Book book2 = new Book("A Clash of Kings", "0987654321", new BigDecimal("15.99"));
         book1.setId(1L);
         book2.setId(2L);
 
-        List<Book> books = Arrays.asList(book1, book2);
+        final List<Book> books = Arrays.asList(book1, book2);
 
         final Author authorWithBooks = new Author("John Doe");
         authorWithBooks.getBooks().addAll(books);
@@ -112,7 +112,7 @@ public class AuthorControllerTest {
 
     @Test
     void updateAuthor() throws Exception {
-        Author updatedAuthor = new Author("Jane Doe");
+        final Author updatedAuthor = new Author("Jane Doe");
         updatedAuthor.setId(1L);
 
         given(userService.updateAuthor(eq(1L), any(Author.class))).willReturn(updatedAuthor);

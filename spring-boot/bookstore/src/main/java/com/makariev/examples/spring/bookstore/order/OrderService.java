@@ -34,7 +34,7 @@ public class OrderService {
 
     @Transactional
     public Order addOrderItem(Long orderId, OrderItem orderItem) {
-        Order order = orderRepository.findById(orderId)
+        final Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found for ID: " + orderId));
         order.addItem(orderItem);
         return orderRepository.save(order);

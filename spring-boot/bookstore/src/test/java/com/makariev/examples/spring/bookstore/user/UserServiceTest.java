@@ -30,12 +30,12 @@ public class UserServiceTest {
     @Test
     public void findAllUsers_ShouldReturnAllUsers() {
         // Arrange
-        User user1 = new User(1L, "user1", "password1", "user1@example.com");
-        User user2 = new User(2L, "user2", "password2", "user2@example.com");
+        final User user1 = new User(1L, "user1", "password1", "user1@example.com");
+        final User user2 = new User(2L, "user2", "password2", "user2@example.com");
         when(userRepository.findAll()).thenReturn(Arrays.asList(user1, user2));
 
         // Act
-        List<User> users = userService.findAllUsers();
+        final List<User> users = userService.findAllUsers();
 
         // Assert
         assertThat(users).hasSize(2);
@@ -46,12 +46,12 @@ public class UserServiceTest {
     @Test
     public void findUserById_WhenUserExists_ShouldReturnUser() {
         // Arrange
-        Long userId = 1L;
-        User user = new User(userId, "user1", "password1", "user1@example.com");
+        final Long userId = 1L;
+        final User user = new User(userId, "user1", "password1", "user1@example.com");
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
         // Act
-        Optional<User> foundUser = userService.findUserById(userId);
+        final Optional<User> foundUser = userService.findUserById(userId);
 
         // Assert
         assertThat(foundUser).isPresent();
@@ -61,11 +61,11 @@ public class UserServiceTest {
     @Test
     public void findUserById_WhenUserDoesNotExist_ShouldReturnEmpty() {
         // Arrange
-        Long userId = 999L;
+        final Long userId = 999L;
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         // Act
-        Optional<User> foundUser = userService.findUserById(userId);
+        final Optional<User> foundUser = userService.findUserById(userId);
 
         // Assert
         assertThat(foundUser).isNotPresent();
@@ -74,12 +74,12 @@ public class UserServiceTest {
     @Test
     public void saveUser_ShouldReturnSavedUser() {
         // Arrange
-        User user = new User(null, "newUser", "newPass", "newuser@example.com");
-        User savedUser = new User(1L, "newUser", "newPass", "newuser@example.com");
+        final User user = new User(null, "newUser", "newPass", "newuser@example.com");
+        final User savedUser = new User(1L, "newUser", "newPass", "newuser@example.com");
         when(userRepository.save(user)).thenReturn(savedUser);
 
         // Act
-        User result = userService.saveUser(user);
+        final User result = userService.saveUser(user);
 
         // Assert
         assertThat(result).isEqualTo(savedUser);
@@ -88,7 +88,7 @@ public class UserServiceTest {
     @Test
     public void deleteUser_ShouldInvokeDeleteById() {
         // Arrange
-        Long userId = 1L;
+        final Long userId = 1L;
 
         // Act
         userService.deleteUser(userId);
@@ -100,15 +100,15 @@ public class UserServiceTest {
     @Test
     public void findCustomerById_WhenCustomerExists_ShouldReturnCustomer() {
         // Arrange
-        Long customerId = 1L;
-        Customer customer = new Customer();
+        final Long customerId = 1L;
+        final Customer customer = new Customer();
         customer.setId(customerId);
         customer.setUsername("customer1");
         customer.setEmail("customer1@example.com");
         when(userRepository.findById(customerId)).thenReturn(Optional.of(customer));
 
         // Act
-        Optional<Customer> foundCustomer = userService.findCustomerById(customerId);
+        final Optional<Customer> foundCustomer = userService.findCustomerById(customerId);
 
         // Assert
         assertThat(foundCustomer).isPresent();
@@ -118,12 +118,12 @@ public class UserServiceTest {
     @Test
     public void findCustomerById_WhenNoCustomer_ShouldReturnEmpty() {
         // Arrange
-        Long customerId = 2L;
-        User user = new User(customerId, "user1", "password1", "user1@example.com");
+        final Long customerId = 2L;
+        final User user = new User(customerId, "user1", "password1", "user1@example.com");
         when(userRepository.findById(customerId)).thenReturn(Optional.of(user));
 
         // Act
-        Optional<Customer> foundCustomer = userService.findCustomerById(customerId);
+        final Optional<Customer> foundCustomer = userService.findCustomerById(customerId);
 
         // Assert
         assertThat(foundCustomer).isEmpty();

@@ -24,11 +24,11 @@ public class BookRepositoryTest {
     @Test
     public void findAllBookSummaries_ReturnsBookSummaries() {
         // Setup
-        Author author = new Author();
+        final Author author = new Author();
         author.setName("Joshua Bloch");
         entityManager.persist(author);
 
-        Book book = new Book();
+        final Book book = new Book();
         book.setTitle("Effective Java");
         book.setAuthor(author);
         book.setIsbn("some-isbn-number");
@@ -38,7 +38,7 @@ public class BookRepositoryTest {
         entityManager.flush();
 
         // Execute
-        List<BookSummary> summaries = bookRepository.findAllBookSummaries();
+        final List<BookSummary> summaries = bookRepository.findAllBookSummaries();
 
         // Verify
         assertThat(summaries).hasSize(1);
