@@ -14,7 +14,12 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.mockito.ArgumentCaptor;
 import static org.mockito.BDDMockito.given;
+import org.mockito.Captor;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import org.springframework.context.ApplicationEventPublisher;
 
 /**
  *
@@ -25,6 +30,12 @@ public class InventoryServiceTest {
 
     @Mock
     private InventoryRepository inventoryRepository;
+
+    @Mock
+    private ApplicationEventPublisher applicationEventPublisher;
+
+    @Captor
+    private ArgumentCaptor<StockAddedEvent> stockAddedEventCaptor;
 
     @InjectMocks
     private InventoryService inventoryService;
@@ -38,7 +49,7 @@ public class InventoryServiceTest {
         inventory.setBook(new Book()); // Assume Book setup
         inventory.setQuantity(100);
     }
-    
+
     @Test
     void findAllInventories_ShouldReturnAllInventories() {
         List<Inventory> expectedInventories = Arrays.asList(inventory);
@@ -67,25 +78,31 @@ public class InventoryServiceTest {
     }
 
     @Test
-    void addStock_ShouldIncreaseInventory() {
+    void addStock_ShouldIncreaseInventoryAndPublishEvent() {
         given(inventoryRepository.findById(1L)).willReturn(Optional.of(inventory));
-        inventory.addStock(10); // Expect this method to increase quantity to 110
         given(inventoryRepository.save(inventory)).willReturn(inventory);
 
         Inventory updatedInventory = inventoryService.addStock(1L, 10);
 
-        assertThat(updatedInventory.getQuantity()).isEqualTo(120);
+        assertThat(updatedInventory.getQuantity()).isEqualTo(110); // assuming the initial setup is corrected
+        verify(applicationEventPublisher, times(1)).publishEvent(new StockAddedEvent(1L, 10));
+
+        //use an ArgumentCaptor to capture and assert properties of events:
+        verify(applicationEventPublisher).publishEvent(stockAddedEventCaptor.capture());
+        StockAddedEvent capturedEvent = stockAddedEventCaptor.getValue();
+        assertThat(capturedEvent.inventoryId()).isEqualTo(1L);
+        assertThat(capturedEvent.quantityAdded()).isEqualTo(10);
     }
 
     @Test
-    void removeStock_ShouldDecreaseInventory() {
+    void removeStock_ShouldDecreaseInventoryAndPublishEvent() {
         given(inventoryRepository.findById(1L)).willReturn(Optional.of(inventory));
-        inventory.removeStock(20); // Expect this method to decrease quantity to 80
         given(inventoryRepository.save(inventory)).willReturn(inventory);
 
         Inventory updatedInventory = inventoryService.removeStock(1L, 20);
 
-        assertThat(updatedInventory.getQuantity()).isEqualTo(60);
+        assertThat(updatedInventory.getQuantity()).isEqualTo(80); // assuming the initial setup is corrected
+        verify(applicationEventPublisher, times(1)).publishEvent(new StockRemovedEvent(1L, 20));
     }
 
     @Test
@@ -94,4 +111,5 @@ public class InventoryServiceTest {
 
         assertThrows(IllegalArgumentException.class, () -> inventoryService.removeStock(1L, 150));
     }
+
 }
