@@ -1,5 +1,6 @@
 package com.makariev.examples.spring.bookstore.product;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,9 +41,8 @@ public class AuthorService {
                     author.setName(updatedAuthor.getName());
                     return authorRepository.save(author);
                 })
-                .orElseGet(() -> {
-                    updatedAuthor.setId(id);
-                    return authorRepository.save(updatedAuthor);
-                });
+                .orElseThrow(
+                        () -> new EntityNotFoundException("Author with id " + id + " not found.")
+                );
     }
 }

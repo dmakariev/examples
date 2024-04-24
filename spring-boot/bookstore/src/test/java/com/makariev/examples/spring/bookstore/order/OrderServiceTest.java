@@ -1,5 +1,6 @@
 package com.makariev.examples.spring.bookstore.order;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;
@@ -81,6 +83,13 @@ public class OrderServiceTest {
         final Order updatedOrder = orderService.addOrderItem(1L, orderItem);
 
         assertThat(updatedOrder.getOrderItems()).contains(orderItem);
+    }
+
+    @Test
+    void findOrderById_ShouldThrowExceptionIfNotFound() {
+        given(orderRepository.findById(1L)).willReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> orderService.addOrderItem(1L, new OrderItem()));
     }
 
     @Test

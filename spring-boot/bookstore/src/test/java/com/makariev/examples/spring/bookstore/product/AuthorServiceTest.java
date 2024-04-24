@@ -1,5 +1,6 @@
 package com.makariev.examples.spring.bookstore.product;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -94,17 +96,10 @@ public class AuthorServiceTest {
     }
 
     @Test
-    void updateAuthor_NonExistingId_CreatesAndReturnsAuthor() {
-        final Author newAuthor = new Author();
-        newAuthor.setId(1L);
-        newAuthor.setName("New Author");
-
+    void updateAuthor_ShouldThrowExceptionIfNotFound() {
         given(authorRepository.findById(1L)).willReturn(Optional.empty());
-        given(authorRepository.save(newAuthor)).willReturn(newAuthor);
 
-        final Author result = authorService.updateAuthor(1L, newAuthor);
-
-        assertThat(result).isNotNull();
-        assertThat(result.getName()).isEqualTo("New Author");
+        assertThrows(EntityNotFoundException.class, () -> authorService.updateAuthor(1L, new Author()));
     }
+
 }

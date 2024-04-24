@@ -109,6 +109,25 @@ public class BookControllerIT {
     }
 
     @Test
+    void updateNonExistingBook_ShouldThrowNotFoundException() throws Exception {
+        // Prepare a book object with changes
+        final Book updatedBook = new Book();
+        updatedBook.setTitle("Non Existing Title");
+        updatedBook.setIsbn("0000000000");
+        updatedBook.setPrice(new BigDecimal("50.00"));
+        updatedBook.setAuthor(author);
+
+        // Convert the book object to JSON
+        final String bookJson = objectMapper.writeValueAsString(updatedBook);
+
+        // Attempt to update a non-existing book
+        mockMvc.perform(put("/api/books/{id}", Long.MAX_VALUE) // Use a very high value for ID
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(bookJson))
+                .andExpect(status().isNotFound()); // Expecting HTTP 404 Not Found
+    }
+
+    @Test
     void deleteBook_ShouldDeleteBook() throws Exception {
         mockMvc.perform(delete("/api/books/{id}", book.getId()))
                 .andExpect(status().isOk());

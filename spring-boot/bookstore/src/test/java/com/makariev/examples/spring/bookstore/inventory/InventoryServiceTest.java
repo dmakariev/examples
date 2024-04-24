@@ -1,6 +1,7 @@
 package com.makariev.examples.spring.bookstore.inventory;
 
 import com.makariev.examples.spring.bookstore.product.Book;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -74,7 +75,7 @@ public class InventoryServiceTest {
     void findInventoryById_ShouldThrowExceptionIfNotFound() {
         given(inventoryRepository.findById(1L)).willReturn(Optional.empty());
 
-        assertThrows(RuntimeException.class, () -> inventoryService.findInventoryById(1L));
+        assertThrows(EntityNotFoundException.class, () -> inventoryService.findInventoryById(1L));
     }
 
     @Test

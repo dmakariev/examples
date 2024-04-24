@@ -1,5 +1,6 @@
 package com.makariev.examples.spring.bookstore.order;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +36,7 @@ public class OrderService {
     @Transactional
     public Order addOrderItem(Long orderId, OrderItem orderItem) {
         final Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found for ID: " + orderId));
+                .orElseThrow(() -> new EntityNotFoundException("Order not found for ID: " + orderId));
         order.addItem(orderItem);
         return orderRepository.save(order);
     }

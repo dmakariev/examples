@@ -98,6 +98,28 @@ public class AuthorControllerTest {
                 .andExpect(jsonPath("$[0].title").value("A Game of Thrones"))
                 .andExpect(jsonPath("$[1].title").value("A Clash of Kings"));
     }
+    
+    @Test
+    void getBooksByAuthorId_ShouldReturnNotFound() throws Exception {
+
+        final Author authorWithNoBooks = new Author("John Doe");
+
+        // Mock the userService to return empty books for the given author ID
+        given(userService.findAuthorById(1L)).willReturn(Optional.of(authorWithNoBooks));
+
+        // Perform the GET request to fetch books by author ID
+        mockMvc.perform(get("/api/authors/{id}/books", 1)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void getBooksByNonExistingAuthorId_ShouldReturnNotFound() throws Exception {
+        // Attempt to get books for a non-existing author ID
+        mockMvc.perform(get("/api/books/by-author/{authorId}", Long.MAX_VALUE) // Use a very high value for authorId
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound()); // Expecting HTTP 404 Not Found
+    }
 
     @Test
     void createAuthor() throws Exception {

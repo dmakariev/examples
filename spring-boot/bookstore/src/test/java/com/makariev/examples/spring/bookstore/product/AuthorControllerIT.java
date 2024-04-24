@@ -93,6 +93,10 @@ public class AuthorControllerIT {
         book2.setAuthor(savedAuthor);
         bookRepository.saveAndFlush(book2);
 
+        savedAuthor.getBooks().add(book1);
+        savedAuthor.getBooks().add(book2);
+        authorRepository.saveAndFlush(savedAuthor);
+
         // Perform the request
         mockMvc.perform(get("/api/authors/{id}/books", savedAuthor.getId())
                 .contentType(MediaType.APPLICATION_JSON))
@@ -118,6 +122,22 @@ public class AuthorControllerIT {
                 .content(objectMapper.writeValueAsString(updatedInfo)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Updated Name"));
+    }
+
+    @Test
+    void updateNonExistingAuthor_ShouldThrowNotFoundException() throws Exception {
+        // Prepare a author object with changes
+        final Author updatedAuthor = new Author();
+        updatedAuthor.setName("Updated Name");
+
+        // Convert the author object to JSON
+        final String authorJson = objectMapper.writeValueAsString(updatedAuthor);
+
+        // Attempt to update a non-existing author
+        mockMvc.perform(put("/api/authors/{id}", Long.MAX_VALUE) // Use a very high value for ID
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(authorJson))
+                .andExpect(status().isNotFound()); // Expecting HTTP 404 Not Found
     }
 
     @Test

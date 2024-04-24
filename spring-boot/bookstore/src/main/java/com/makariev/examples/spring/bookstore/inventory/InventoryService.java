@@ -1,5 +1,6 @@
 package com.makariev.examples.spring.bookstore.inventory;
 
+import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -26,13 +27,14 @@ public class InventoryService {
 
     public Inventory findInventoryById(Long inventoryId) {
         return inventoryRepository.findById(inventoryId)
-                .orElseThrow(() -> new RuntimeException("Inventory not found for ID: " + inventoryId));
+                .orElseThrow(
+                        () -> new EntityNotFoundException("Inventory not found for ID: " + inventoryId)
+                );
     }
 
     @Transactional
     public Inventory addStock(Long inventoryId, int quantity) {
-        final Inventory inventory = inventoryRepository.findById(inventoryId)
-                .orElseThrow(() -> new RuntimeException("Inventory not found!"));
+        final Inventory inventory = findInventoryById(inventoryId);
         inventory.addStock(quantity);
         final Inventory saved = inventoryRepository.save(inventory);
         applicationEventPublisher.publishEvent(new StockAddedEvent(inventoryId, quantity));
@@ -41,8 +43,7 @@ public class InventoryService {
 
     @Transactional
     public Inventory removeStock(Long inventoryId, int quantity) {
-        final Inventory inventory = inventoryRepository.findById(inventoryId)
-                .orElseThrow(() -> new RuntimeException("Inventory not found!"));
+        final Inventory inventory = findInventoryById(inventoryId);
         inventory.removeStock(quantity);
         final Inventory saved = inventoryRepository.save(inventory);
         applicationEventPublisher.publishEvent(new StockRemovedEvent(inventoryId, quantity));

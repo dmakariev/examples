@@ -1,5 +1,6 @@
 package com.makariev.examples.spring.bookstore.product;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -42,9 +43,8 @@ public class BookService {
                     book.setPrice(updatedBook.getPrice());
                     return bookRepository.save(book);
                 })
-                .orElseGet(() -> {
-                    updatedBook.setId(id);
-                    return bookRepository.save(updatedBook);
-                });
+                .orElseThrow(
+                        () -> new EntityNotFoundException("Book with id " + id + " not found.")
+                );
     }
 }

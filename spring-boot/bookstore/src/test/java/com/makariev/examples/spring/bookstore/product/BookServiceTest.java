@@ -1,5 +1,6 @@
 package com.makariev.examples.spring.bookstore.product;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -98,5 +100,12 @@ public class BookServiceTest {
 
         assertThat(result).isNotNull();
         assertThat(result.getTitle()).isEqualTo("Effective Java 2nd Edition");
+    }
+
+    @Test
+    void updateAuthor_ShouldThrowExceptionIfNotFound() {
+        given(bookRepository.findById(1L)).willReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> bookService.updateBook(1L, new Book()));
     }
 }
