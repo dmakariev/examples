@@ -1,5 +1,6 @@
 package com.makariev.examples.spring.bookstore.inventory;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.makariev.examples.spring.bookstore.product.Book;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,6 +30,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 @ToString
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Inventory {
 
     @Id
