@@ -1,6 +1,6 @@
 //usr/bin/env jbang "$0" "$@" ; exit $?
 //JAVA 22
-//DEPS org.springframework.boot:spring-boot-dependencies:3.2.4@pom
+//DEPS org.springframework.boot:spring-boot-dependencies:3.3.0@pom
 //DEPS org.springframework.boot:spring-boot-starter-web
 //DEPS org.springframework.boot:spring-boot-starter-data-jpa
 //DEPS org.springframework.boot:spring-boot-starter-actuator
