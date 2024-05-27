@@ -1,8 +1,8 @@
 services:
   backend:
-    image: bookstore_backend:liberica-openjdk
+    image: bookstore_backend:aws-alpine
     build: 
-      dockerfile: ./Dockerfile    
+      dockerfile: ./Dockerfile.aws    
     ports:
       - 8080:8088
     environment:
