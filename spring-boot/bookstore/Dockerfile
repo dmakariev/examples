@@ -1,5 +1,4 @@
-FROM bellsoft/liberica-openjdk-alpine-musl:21-cds as build
-
+FROM ghcr.io/bell-sw/liberica-openjdk-alpine-musl:21 as build
 WORKDIR /workspace/app
 
 COPY mvnw .
@@ -8,22 +7,12 @@ COPY pom.xml .
 COPY src src
 
 RUN --mount=type=cache,target=/root/.m2 ./mvnw install -DskipTests
+RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
 
-ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} application.jar
-
-RUN java -Djarmode=tools -jar application.jar extract --destination application
-WORKDIR /workspace/app/application
-RUN java -XX:ArchiveClassesAtExit=application.jsa -Dspring.context.exit=onRefresh -jar application.jar
-
-FROM bellsoft/liberica-openjdk-alpine-musl:21-cds
-
+FROM ghcr.io/bell-sw/liberica-openjdk-alpine-musl:21
 VOLUME /tmp
-
-ARG DEPENDENCY=/workspace/app
-COPY --from=build ${DEPENDENCY}/application /app/application
-COPY --from=build ${DEPENDENCY}/application/application.jsa /app/application.jsa
-
-WORKDIR /app/application
-
-ENTRYPOINT ["java", "-XX:SharedArchiveFile=application.jsa", "-jar", "application.jar"]
+ARG DEPENDENCY=/workspace/app/target/dependency
+COPY --from=build ${DEPENDENCY}/BOOT-INF/lib /app/lib
+COPY --from=build ${DEPENDENCY}/META-INF /app/META-INF
+COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /app
+ENTRYPOINT ["java","-cp","app:app/lib/*","com.makariev.examples.spring.bookstore.BookstoreApplication"]

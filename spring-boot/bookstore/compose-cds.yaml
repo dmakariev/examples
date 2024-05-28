@@ -1,0 +1,60 @@
+services:
+  backend:
+    image: bookstore_backend:liberica-cds
+    build: 
+      dockerfile: ./Dockerfile.cds    
+    ports:
+      - 8080:8088
+    environment:
+      - SERVER_PORT=8088
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/bookstore
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=bookstore
+      - SPRING_H2_CONSOLE_ENABLED=false
+      - SPRING_SQL_INIT_PLATFORM=postgresql
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - MANAGEMENT_TRACING_SAMPLING_PROBABILITY=1.0
+      - MANAGEMENT_TRACING_ENABLED=true
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://zipkin:9411/api/v2/spans
+    networks:
+      - bookstore-spring-postgres
+  db:
+    image: postgres:16
+    restart: always
+    volumes:
+      - bookstore-db-data:/var/lib/postgresql/data
+    networks:
+      - bookstore-spring-postgres
+    environment:
+      - POSTGRES_DB=bookstore
+      - POSTGRES_PASSWORD=bookstore
+    expose:
+      - 5432
+  pgadmin:
+    container_name: bookstore-pgadmin
+    image: dpage/pgadmin4:8.5
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin_not_used@user.com
+      PGADMIN_DEFAULT_PASSWORD: admin_not_used
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+    volumes:
+       - bookstore-pgadmin:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    networks:
+      - bookstore-spring-postgres
+    restart: always
+  zipkin:
+    container_name: zipkin
+    image: openzipkin/zipkin
+    extra_hosts: [ 'host.docker.internal:host-gateway' ]
+    ports:
+      - "9411:9411"
+    networks:
+      - bookstore-spring-postgres  
+volumes:
+  bookstore-db-data:
+  bookstore-pgadmin:
+networks:
+  bookstore-spring-postgres:

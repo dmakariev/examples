@@ -11,7 +11,7 @@ RUN --mount=type=cache,target=/root/.m2 ./mvnw install -DskipTests -Pnative,enha
 # Add a step to list the contents of the target directory
 RUN ls -l /workspace/app/target
 
-FROM alpine:3.20.0
+FROM ghcr.io/linuxcontainers/alpine:3.20
 VOLUME /tmp
 
 # Install libc6-compat for dynamic linking
