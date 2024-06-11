@@ -1,99 +1,99 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Person CRUD Application</title>
-    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
-    <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.classless.min.css" />-->
-    <script src="https://cdn.jsdelivr.net/npm/vue@3.4.21/dist/vue.global.prod.js"></script>
-    <style>
-        button + button {
-            margin-left: 10px;
-        }
-    </style>
-</head>
-<body>
-    <div id="app">
-        <header>
-            <h1>Person CRUD Application</h1>
-        </header>
-        <main>
-            <button @click="showPersonModal(null)">Add Person</button>
-            <table>
-                <thead>
-                    <tr>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Year of Birth</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="person in persons" :key="person.id">
-                        <td>{{ person.firstName }}</td>
-                        <td>{{ person.lastName }}</td>
-                        <td>{{ person.birthYear }}</td>
-                        <td>
-                            <button @click="showPersonModal(person)">Edit</button>
-                            <button @click="deletePerson(person.id)">Delete</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <nav style="display: flex; justify-content: center; margin-top: 20px;">
-                <ul style="display: flex; list-style: none; padding: 0;">
-                    <li v-for="page in totalPages" :key="page" @click="changePage(page)" style="margin: 0 5px;">
-                        <a href="#" :style="{ fontWeight: currentPage === page ? 'bold' : 'normal', cursor: 'pointer' }">{{ page }}</a>
-                    </li>
-                </ul>
-            </nav>
-        </main>
-        <footer>
-            <p>&copy; 2024 Person CRUD Application. All rights reserved.</p>
-        </footer>
+    <head>
+        <title>Person CRUD Application</title>
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+        <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.classless.min.css" />-->
+        <script src="https://cdn.jsdelivr.net/npm/vue@3.4.21/dist/vue.global.prod.js"></script>
+        <style>
+            button + button {
+                margin-left: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app">
+            <header>
+                <h1>Person CRUD Application</h1>
+            </header>
+            <main>
+                <button @click="showPersonModal(null)">Add Person</button>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Year of Birth</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="person in persons" :key="person.id">
+                            <td>{{ person.firstName }}</td>
+                            <td>{{ person.lastName }}</td>
+                            <td>{{ person.birthYear }}</td>
+                            <td>
+                                <button @click="showPersonModal(person)">Edit</button>
+                                <button @click="deletePerson(person.id)">Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <nav style="display: flex; justify-content: center; margin-top: 20px;">
+                    <ul style="display: flex; list-style: none; padding: 0;">
+                        <li v-for="page in totalPages" :key="page" @click="changePage(page)" style="margin: 0 5px;">
+                            <a href="#" :style="{ fontWeight: currentPage === page ? 'bold' : 'normal', cursor: 'pointer' }">{{ page }}</a>
+                        </li>
+                    </ul>
+                </nav>
+            </main>
+            <footer>
+                <p>&copy; 2024 Person CRUD Application. All rights reserved.</p>
+            </footer>
 
-        <!-- Dialog -->
-        <dialog id="person-dialog">
-            <h2>{{ editMode ? 'Edit' : 'Add' }} Person</h2>
-            <form @submit.prevent="savePerson">
-                <fieldset>
-                    <label for="firstName">First Name</label>
-                    <input type="text" id="firstName" v-model="formData.firstName" placeholder="First Name" required>
-                    <label for="lastName">Last Name</label>
-                    <input type="text" id="lastName" v-model="formData.lastName" placeholder="Last Name" required>
-                    <label for="birthYear">Year of Birth</label>
-                    <input type="number" id="birthYear" v-model="formData.birthYear" placeholder="Year of birth" required>
-                </fieldset>
-                <menu>
-                    <button type="submit">{{ editMode ? 'Update' : 'Add' }}</button>
-                    <button type="button" @click="closeModal">Cancel</button>
-                </menu>
-            </form>
-        </dialog>
-    </div>        
+            <!-- Dialog -->
+            <dialog id="person-dialog">
+                <h2>{{ editMode ? 'Edit' : 'Add' }} Person</h2>
+                <form @submit.prevent="savePerson">
+                    <fieldset>
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" v-model="formData.firstName" placeholder="First Name" required>
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" v-model="formData.lastName" placeholder="Last Name" required>
+                        <label for="birthYear">Year of Birth</label>
+                        <input type="number" id="birthYear" v-model="formData.birthYear" placeholder="Year of birth" required>
+                    </fieldset>
+                    <menu>
+                        <button type="submit">{{ editMode ? 'Update' : 'Add' }}</button>
+                        <button type="button" @click="closeModal">Cancel</button>
+                    </menu>
+                </form>
+            </dialog>
+        </div>        
 
-    <script>
-        const { createApp, ref, computed } = Vue;
+        <script>
+    const {createApp, ref, computed} = Vue;
 
-        createApp({
-            data() {
-                return {
-                    persons: [],
-                    modalVisible: false,
-                    editMode: false,
-                    formData: {
-                        firstName: '',
-                        lastName: '',
-                        birthYear: ''
-                    },
-                    editedPersonId: null,
-                    pageSize: 5,
-                    currentPage: 1,
-                    totalPages: 1
-                };
-            },
-            methods: {
-                getAllPersons(page) {
-                    fetch(`/api/persons?page=${page - 1}&size=${this.pageSize}`)
+    createApp({
+        data() {
+            return {
+                persons: [],
+                modalVisible: false,
+                editMode: false,
+                formData: {
+                    firstName: '',
+                    lastName: '',
+                    birthYear: ''
+                },
+                editedPersonId: null,
+                pageSize: 5,
+                currentPage: 1,
+                totalPages: 1
+            };
+        },
+        methods: {
+            getAllPersons(page) {
+                fetch(`/api/persons?page=${page - 1}&size=${this.pageSize}`)
                         .then(response => response.json())
                         .then(data => {
                             this.persons = data.content;
@@ -102,27 +102,27 @@
                         .catch(error => {
                             console.error('Error fetching persons:', error);
                         });
-                },
-                showPersonModal(person) {
-                    this.editMode = !!person;
-                    this.modalVisible = true;
-                    if (person) {
-                        this.editedPersonId = person.id;
-                        this.formData = { ...person };
-                    } else {
-                        this.resetForm();
-                    }
-                    document.getElementById('person-dialog').showModal();
-                },
-                savePerson() {
-                    if (this.editMode) {
-                        fetch(`/api/persons/${this.editedPersonId}`, {
-                            method: 'PUT',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(this.formData)
-                        })
+            },
+            showPersonModal(person) {
+                this.editMode = !!person;
+                this.modalVisible = true;
+                if (person) {
+                    this.editedPersonId = person.id;
+                    this.formData = {...person};
+                } else {
+                    this.resetForm();
+                }
+                document.getElementById('person-dialog').showModal();
+            },
+            savePerson() {
+                if (this.editMode) {
+                    fetch(`/api/persons/${this.editedPersonId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(this.formData)
+                    })
                             .then(() => {
                                 this.getAllPersons(this.currentPage);
                                 this.closeModal();
@@ -130,14 +130,14 @@
                             .catch(error => {
                                 console.error('Error updating person:', error);
                             });
-                    } else {
-                        fetch('/api/persons', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(this.formData)
-                        })
+                } else {
+                    fetch('/api/persons', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(this.formData)
+                    })
                             .then(() => {
                                 this.getAllPersons(this.currentPage);
                                 this.closeModal();
@@ -145,42 +145,42 @@
                             .catch(error => {
                                 console.error('Error adding person:', error);
                             });
-                    }
-                },
-                deletePerson(personId) {
-                    fetch(`/api/persons/${personId}`, {
-                        method: 'DELETE'
-                    })
+                }
+            },
+            deletePerson(personId) {
+                fetch(`/api/persons/${personId}`, {
+                    method: 'DELETE'
+                })
                         .then(() => {
                             this.getAllPersons(this.currentPage);
                         })
                         .catch(error => {
                             console.error('Error deleting person:', error);
                         });
-                },
-                closeModal() {
-                    this.modalVisible = false;
-                    this.editMode = false;
-                    this.resetForm();
-                    document.getElementById('person-dialog').close();
-                },
-                resetForm() {
-                    this.formData = {
-                        firstName: '',
-                        lastName: '',
-                        birthYear: ''
-                    };
-                    this.editedPersonId = null;
-                },
-                changePage(page) {
-                    this.currentPage = page;
-                    this.getAllPersons(page);
-                }
             },
-            mounted() {
-                this.getAllPersons(this.currentPage);
+            closeModal() {
+                this.modalVisible = false;
+                this.editMode = false;
+                this.resetForm();
+                document.getElementById('person-dialog').close();
+            },
+            resetForm() {
+                this.formData = {
+                    firstName: '',
+                    lastName: '',
+                    birthYear: ''
+                };
+                this.editedPersonId = null;
+            },
+            changePage(page) {
+                this.currentPage = page;
+                this.getAllPersons(page);
             }
-        }).mount('#app');
-    </script>
-</body>
+        },
+        mounted() {
+            this.getAllPersons(this.currentPage);
+        }
+    }).mount('#app');
+        </script>
+    </body>
 </html>
