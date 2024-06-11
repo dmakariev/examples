@@ -14,6 +14,8 @@
 //DEPS org.mvnpm:simpledotcss:2.3.1
 //DEPS org.webjars.npm:picocss__pico:2.0.6
 
+//DEPS org.springframework.boot:spring-boot-starter-thymeleaf
+
 //JAVA_OPTIONS -Dserver.port=8080
 //JAVA_OPTIONS -Dspring.datasource.url=jdbc:h2:mem:person-db;MODE=PostgreSQL;
 //JAVA_OPTIONS -Dspring.h2.console.enabled=true -Dspring.h2.console.settings.web-allow-others=true
@@ -23,6 +25,11 @@
 //FILES META-INF/resources/index.html=index-fetch.html
 //FILES META-INF/resources/hello.xhtml=hello.xhtml
 //FILES META-INF/resources/person.xhtml=person.xhtml
+
+//FILES templates/persons.html=persons.html
+//FILES templates/fragments/personRows.html=personRows.html
+//FILES templates/fragments/personForm.html=personForm.html
+//FILES templates/fragments/pagination.html=pagination.html
 
 //REPOS mavencentral,sb_snapshot=https://repo.spring.io/snapshot,sb_milestone=https://repo.spring.io/milestone
 package com.makariev.examples.jbang;
@@ -41,6 +48,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.context.annotation.SessionScope;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -340,3 +352,87 @@ public static class PersonController {
 
 interface PersonRepository extends JpaRepository<com.makariev.examples.jbang.springbootJpaJsf.Person, Long> {
 }
+
+@Controller
+@RequestMapping("/persons")
+@RequiredArgsConstructor
+class PersonPageController {
+
+    private final PersonRepository personRepository;
+
+    @GetMapping
+    public String getPersonsPage() {
+        return "persons";
+    }
+}
+
+////////
+
+@Controller
+@RequestMapping("/htmx/persons")
+@RequiredArgsConstructor
+class PersonApiController {
+
+    private final PersonRepository personRepository;
+
+    @GetMapping("/list")
+    public String findAll(@RequestParam(name = "page", defaultValue = "0") int page,
+                          @RequestParam(name = "size", defaultValue = "5") int size, Model model) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<com.makariev.examples.jbang.springbootJpaJsf.Person> personPage = personRepository.findAll(pageable);
+
+        model.addAttribute("persons", personPage.getContent());
+        model.addAttribute("totalPages", personPage.getTotalPages());
+        model.addAttribute("currentPage", page);
+
+        return "fragments/personRows :: personRows";
+    }
+
+    @GetMapping("/pagination")
+    public String getPagination(@RequestParam(name = "page", defaultValue = "0") int page,
+                                @RequestParam(name = "size", defaultValue = "5") int size, Model model) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<com.makariev.examples.jbang.springbootJpaJsf.Person> personPage = personRepository.findAll(pageable);
+
+        model.addAttribute("totalPages", personPage.getTotalPages());
+        model.addAttribute("currentPage", page);
+
+        return "fragments/pagination :: pagination";
+    }
+
+    @GetMapping("/form")
+    public String showPersonForm(@RequestParam(name = "id", required = false) Long id, Model model) {
+        com.makariev.examples.jbang.springbootJpaJsf.Person person = id != null
+                ? personRepository.findById(id).orElse(new com.makariev.examples.jbang.springbootJpaJsf.Person())
+                : new com.makariev.examples.jbang.springbootJpaJsf.Person();
+
+        model.addAttribute("person", person);
+        model.addAttribute("editMode", id != null);
+
+        return "fragments/personForm :: personForm";
+    }
+
+    @PostMapping("/create")
+    public String createPerson(@ModelAttribute com.makariev.examples.jbang.springbootJpaJsf.Person person,
+                               @RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+        personRepository.save(person);
+        return findAll(page, 5, model);
+    }
+
+    @PostMapping("/update")
+    public String updatePerson(@ModelAttribute com.makariev.examples.jbang.springbootJpaJsf.Person person,
+                               @RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+        com.makariev.examples.jbang.springbootJpaJsf.Person existingPerson = personRepository.findById(person.getId())
+                .orElseThrow();
+        existingPerson.setFirstName(person.getFirstName());
+        existingPerson.setLastName(person.getLastName());
+        existingPerson.setBirthYear(person.getBirthYear());
+        personRepository.save(existingPerson);
+        return findAll(page, 5, model);
+    }
+}
+
+
+
+
+

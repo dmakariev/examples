@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Person CRUD Application</title>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+    <script src="https://unpkg.com/htmx.org@1.9.12/dist/htmx.js" integrity="sha384-qbtR4rS9RrUMECUWDWM2+YGgN3U4V4ZncZ0BvUcg9FGct0jqXz3PUdVpU1p0yrXS" crossorigin="anonymous"></script>
+    <style>
+        button + button {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1>Person CRUD Application</h1>
+        </header>
+        <main>
+            <button hx-get="/htmx/persons/form" hx-target="#person-dialog" hx-trigger="click">Add Person</button>
+            <table>
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Year of Birth</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="persons-list" hx-get="/htmx/persons/list?page=0&size=5" hx-trigger="load" hx-target="#persons-list" hx-swap="outerHTML">
+                    <!-- Rows will be injected by HTMX -->
+                </tbody>
+            </table>
+            <nav id="pagination-nav" style="display: flex; justify-content: center; margin-top: 20px;" hx-get="/htmx/persons/pagination?page=0&size=5" hx-trigger="load" hx-target="#pagination-nav" hx-swap="outerHTML">
+                <!-- Pagination will be injected by HTMX -->
+            </nav>
+        </main>
+        <footer>
+            <p>&copy; 2024 Person CRUD Application. All rights reserved.</p>
+        </footer>
+
+        <!-- Dialog -->
+        <dialog id="person-dialog">
+            <!-- Form will be injected by HTMX -->
+        </dialog>
+    </div>
+
+    <script>
+        document.body.addEventListener('htmx:afterSwap', (event) => {
+            if (event.detail.target.id === "person-dialog") {
+                document.getElementById('person-dialog').showModal();
+            }
+        });
+
+        document.body.addEventListener('htmx:beforeRequest', (event) => {
+            if (event.detail.elt.closest('#person-dialog')) {
+                document.getElementById('person-dialog').close();
+            }
+        });
+    </script>
+</body>
+</html>
