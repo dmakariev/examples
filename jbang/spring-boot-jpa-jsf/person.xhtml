@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:f="jakarta.faces.core"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="jakarta.faces.passthrough"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:jsf="jakarta.faces">
+<h:head>
+    <title>Person CRUD Application</title>
+    <h:outputStylesheet library="_static" name="simpledotcss/2.3.1/simple.css"/>
+</h:head>
+<h:body>
+    <h:form id="mainForm">
+        <h1>Person CRUD Application</h1>
+        <h:commandButton value="Add Person" action="#{personBean.create}">
+            <f:ajax execute="@this" render=":mainForm:personDialogContent" onevent="handleDialog"/>
+        </h:commandButton>
+
+        <table jsf:id="table">
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Year of Birth</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ui:repeat value="#{personBean.persons}" var="person">
+                    <tr>
+                        <td>#{person.firstName}</td>
+                        <td>#{person.lastName}</td>
+                        <td>#{person.birthYear}</td>
+                        <td>
+                            <h:commandButton value="Edit" action="#{personBean.edit(person)}">
+                                <f:ajax execute="@this" render=":mainForm:personDialogContent" onevent="handleDialog"/>
+                            </h:commandButton>
+                            <h:commandButton value="Delete" action="#{personBean.delete(person)}" style="margin-left:10px">
+                                <f:ajax execute="@this" render="@form"/>
+                            </h:commandButton>
+                        </td>
+                    </tr>
+                </ui:repeat>
+            </tbody>
+        </table>
+
+        <nav style="display: flex; justify-content: center; margin-top: 20px;">
+            <ul style="display: flex; list-style: none; padding: 0;">
+                <ui:repeat value="#{personBean.pageNumbers}" var="page">
+                    <li style="margin: 0 5px;">
+                        <h:commandLink action="#{personBean.changePage(page)}" value="#{page}" style="#{personBean.currentPage == page ? 'font-weight:bold' : ''}">
+                            <f:ajax execute="@this" render="@form"/>
+                        </h:commandLink>
+                    </li>
+                </ui:repeat>
+            </ul>
+        </nav>
+
+        <dialog id="personDialog">
+            <h:panelGroup id="personDialogContent">
+                <h2><h:outputText value="#{personBean.editMode ? 'Edit' : 'Add'} Person" /></h2>
+                <h:messages globalOnly="true" layout="table" id="personFormMessages" showDetail="true"/>
+                <fieldset>
+                    <h:outputLabel for="firstName" value="First Name" />
+                    <h:inputText id="firstName" value="#{personBean.formData.firstName}" p:placeholder="First Name"/>
+                    <h:outputLabel for="lastName" value="Last Name" />
+                    <h:inputText id="lastName" value="#{personBean.formData.lastName}" p:placeholder="Last Name"/>
+                    <h:outputLabel for="birthYear" value="Year of Birth" />
+                    <h:inputText id="birthYear" value="#{personBean.formData.birthYear}" type="number"  p:placeholder="Year of Birth"/>
+                </fieldset>
+                <menu>
+                    <h:commandButton value="#{personBean.editMode ? 'Update' : 'Add'}" action="#{personBean.save}">
+                        <f:ajax execute="@form" render="personFormMessages table"/>
+                    </h:commandButton>
+                    <h:commandButton value="Cancel" type="button" onclick="closeDialog(); return false;" style="margin-left:10px">
+                    </h:commandButton>
+                </menu>
+            </h:panelGroup>
+        </dialog>
+    </h:form>
+
+    <script>
+        function handleDialog(data) {
+            if (data.status === 'success') {
+                showPersonDialog();
+            }
+        }
+
+        function showPersonDialog() {
+            document.getElementById('personDialog').showModal();
+        }
+
+        function closeDialog() {
+            document.getElementById('personDialog').close();
+        }
+    </script>
+</h:body>
+</html>
