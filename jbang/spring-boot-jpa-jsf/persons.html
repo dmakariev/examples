@@ -16,7 +16,7 @@
             <h1>Person CRUD Application</h1>
         </header>
         <main>
-            <button hx-get="/htmx/persons/form" hx-target="#person-dialog" hx-trigger="click">Add Person</button>
+            <button th:attr="hx-get=@{/htmx/persons/form(page=${currentPage})}" hx-target="#person-dialog" hx-trigger="click">Add Person</button>
             <table>
                 <thead>
                     <tr>
@@ -27,7 +27,7 @@
                     </tr>
                 </thead>
                 <tbody id="persons-list" hx-get="/htmx/persons/list?page=0&size=5" hx-trigger="load" hx-target="#persons-list" hx-swap="outerHTML">
-                    <!-- Rows will be injected by HTMX -->
+                    <!-- Rows will be dynamically loaded and replaced by HTMX -->
                 </tbody>
             </table>
             <nav id="pagination-nav" style="display: flex; justify-content: center; margin-top: 20px;" hx-get="/htmx/persons/pagination?page=0&size=5" hx-trigger="load" hx-target="#pagination-nav" hx-swap="outerHTML">

@@ -384,6 +384,7 @@ class PersonApiController {
         model.addAttribute("persons", personPage.getContent());
         model.addAttribute("totalPages", personPage.getTotalPages());
         model.addAttribute("currentPage", page);
+        model.addAttribute("size", size);
 
         return "fragments/personRows :: personRows";
     }
@@ -396,18 +397,20 @@ class PersonApiController {
 
         model.addAttribute("totalPages", personPage.getTotalPages());
         model.addAttribute("currentPage", page);
+        model.addAttribute("size", size);
 
         return "fragments/pagination :: pagination";
     }
 
     @GetMapping("/form")
-    public String showPersonForm(@RequestParam(name = "id", required = false) Long id, Model model) {
+    public String showPersonForm(@RequestParam(name = "id", required = false) Long id, @RequestParam(name = "page", defaultValue = "0") int page, Model model) {
         com.makariev.examples.jbang.springbootJpaJsf.Person person = id != null
                 ? personRepository.findById(id).orElse(new com.makariev.examples.jbang.springbootJpaJsf.Person())
                 : new com.makariev.examples.jbang.springbootJpaJsf.Person();
 
         model.addAttribute("person", person);
         model.addAttribute("editMode", id != null);
+        model.addAttribute("currentPage", page);
 
         return "fragments/personForm :: personForm";
     }
@@ -416,7 +419,7 @@ class PersonApiController {
     public String createPerson(@ModelAttribute com.makariev.examples.jbang.springbootJpaJsf.Person person,
                                @RequestParam(name = "page", defaultValue = "0") int page, Model model) {
         personRepository.save(person);
-        return findAll(page, 5, model);
+        return findAll(page, 5, model); // Return the list of persons for the current page
     }
 
     @PostMapping("/update")
@@ -428,11 +431,8 @@ class PersonApiController {
         existingPerson.setLastName(person.getLastName());
         existingPerson.setBirthYear(person.getBirthYear());
         personRepository.save(existingPerson);
-        return findAll(page, 5, model);
+        return findAll(page, 5, model); // Return the list of persons for the current page
     }
 }
-
-
-
 
 

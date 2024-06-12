@@ -1,5 +1,12 @@
-<ul id="pagination" th:fragment="pagination" style="display: flex; list-style: none; padding: 0;">
-    <li th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${pageNum == currentPage} ? 'active'">
-        <a href="#" th:text="${pageNum + 1}" th:attr="hx-get=@{/htmx/persons/list(page=${pageNum}, size=${5})}" hx-target="#persons-list" hx-swap="outerHTML" hx-trigger="click" th:style="${pageNum == currentPage} ? 'font-weight: bold;' : ''"></a>
-    </li>
-</ul>
+<nav th:fragment="pagination" style="display: flex; justify-content: center; margin-top: 20px;">
+    <ul style="display: flex; list-style: none; padding: 0;">
+        <li th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}">
+            <a href="#" th:text="${pageNum + 1}"
+               th:attr="hx-get=@{/htmx/persons/list(page=${pageNum}, size=${size})}"
+               hx-target="#persons-list"
+               hx-swap="outerHTML"
+               hx-trigger="click"
+               th:style="${pageNum == currentPage} ? 'font-weight: bold;' : ''"></a>
+        </li>
+    </ul>
+</nav>
