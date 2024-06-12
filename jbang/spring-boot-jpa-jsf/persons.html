@@ -16,7 +16,7 @@
             <h1>Person CRUD Application</h1>
         </header>
         <main>
-            <button th:attr="hx-get=@{/htmx/persons/form(page=${currentPage})}" hx-target="#person-dialog" hx-trigger="click">Add Person</button>
+            <button th:attr="hx-get=@{/persons/htmx/form(page=${currentPage})}" hx-target="#person-dialog" hx-trigger="click">Add Person</button>
             <table>
                 <thead>
                     <tr>
@@ -26,12 +26,29 @@
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody id="persons-list" hx-get="/htmx/persons/list?page=0&size=5" hx-trigger="load" hx-target="#persons-list" hx-swap="outerHTML">
-                    <!-- Rows will be dynamically loaded and replaced by HTMX -->
+                <tbody id="persons-list" th:fragment="personRows(persons, currentPage)">
+                    <tr th:each="person : ${persons}">
+                        <td th:text="${person.firstName}">First Name</td>
+                        <td th:text="${person.lastName}">Last Name</td>
+                        <td th:text="${person.birthYear}">Year of Birth</td>
+                        <td>
+                            <button th:attr="hx-get=@{/persons/htmx/form(id=${person.id},page=${currentPage})}" hx-target="#person-dialog" hx-trigger="click">Edit</button>
+                            <button th:attr="hx-delete=@{/persons/htmx/{id}(id=${person.id})}" hx-swap="none" hx-trigger="click">Delete</button>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
-            <nav id="pagination-nav" style="display: flex; justify-content: center; margin-top: 20px;" hx-get="/htmx/persons/pagination?page=0&size=5" hx-trigger="load" hx-target="#pagination-nav" hx-swap="outerHTML">
-                <!-- Pagination will be injected by HTMX -->
+            <nav id="pagination-nav" style="display: flex; justify-content: center; margin-top: 20px;" th:fragment="pagination(totalPages, currentPage, size)">
+                <ul style="display: flex; list-style: none; padding: 0;">
+                    <li th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}">
+                        <a href="#" th:text="${pageNum + 1}"
+                           th:attr="hx-get=@{/persons/htmx/list(page=${pageNum}, size=${size})}"
+                           hx-target="#persons-list"
+                           hx-swap="outerHTML"
+                           hx-trigger="click"
+                           th:style="${pageNum == currentPage} ? 'font-weight: bold;' : ''"></a>
+                    </li>
+                </ul>
             </nav>
         </main>
         <footer>
@@ -40,7 +57,36 @@
 
         <!-- Dialog -->
         <dialog id="person-dialog">
-            <!-- Form will be injected by HTMX -->
+            <!-- Person Form Fragment -->
+            <form th:fragment="personForm(editMode, currentPage, person)"
+                  th:action="@{${editMode} ? '/persons/htmx/update' : '/persons/htmx/create'}"
+                  th:attr="hx-post=@{${editMode} ? '/persons/htmx/update' : '/persons/htmx/create'}"
+                  hx-target="#persons-list"
+                  hx-swap="outerHTML"
+                  method="post">
+                
+                <input type="hidden" th:if="${editMode}" th:value="${person?.id}" name="id"/>
+                <input type="hidden" th:if="${editMode}" name="_method" value="put"/>
+                <input type="hidden" name="page" th:value="${currentPage}"/>
+                
+                <h2 th:text="${editMode} ? 'Edit' : 'Add' + ' Person'"></h2>
+                
+                <fieldset>
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" name="firstName" th:value="${person?.firstName}" placeholder="First Name" required>
+                    
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" name="lastName" th:value="${person?.lastName}" placeholder="Last Name" required>
+                    
+                    <label for="birthYear">Year of Birth</label>
+                    <input type="number" id="birthYear" name="birthYear" th:value="${person?.birthYear}" placeholder="Year of birth" required>
+                </fieldset>
+                
+                <menu>
+                    <button type="submit" th:text="${editMode} ? 'Update' : 'Add'"></button>
+                    <button type="button" onclick="document.getElementById('person-dialog').close()">Cancel</button>
+                </menu>
+            </form>
         </dialog>
     </div>
 

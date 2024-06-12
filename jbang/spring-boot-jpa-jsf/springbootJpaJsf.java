@@ -353,29 +353,118 @@ public static class PersonController {
 interface PersonRepository extends JpaRepository<com.makariev.examples.jbang.springbootJpaJsf.Person, Long> {
 }
 
-@Controller
-@RequestMapping("/persons")
-@RequiredArgsConstructor
-class PersonPageController {
-
-    private final PersonRepository personRepository;
-
-    @GetMapping
-    public String getPersonsPage() {
-        return "persons";
-    }
-}
 
 ////////
 
+// @Controller
+// @RequestMapping("/persons")
+// @RequiredArgsConstructor
+// class PersonApiController {
+// 
+//     private final PersonRepository personRepository;
+// 
+//     @GetMapping
+//     public String getPersonsPage(Model model) {
+//         // Initialize variables
+//         Pageable pageable = PageRequest.of(0, 5);
+//         Page<com.makariev.examples.jbang.springbootJpaJsf.Person> personPage = personRepository.findAll(pageable);
+// 
+//         model.addAttribute("persons", personPage.getContent());
+//         model.addAttribute("totalPages", personPage.getTotalPages());
+//         model.addAttribute("currentPage", 0);
+//         model.addAttribute("size", 5);
+// 
+//         return "persons";
+//     }
+// 
+//     @GetMapping("/htmx/list")
+//     public String findAll(@RequestParam(name = "page", defaultValue = "0") int page,
+//                           @RequestParam(name = "size", defaultValue = "5") int size, Model model) {
+//         Pageable pageable = PageRequest.of(page, size);
+//         Page<com.makariev.examples.jbang.springbootJpaJsf.Person> personPage = personRepository.findAll(pageable);
+// 
+//         model.addAttribute("persons", personPage.getContent());
+//         model.addAttribute("totalPages", personPage.getTotalPages());
+//         model.addAttribute("currentPage", page);
+//         model.addAttribute("size", size);
+// 
+//         return "persons :: personRows(persons=${persons}, currentPage=${currentPage})";
+//     }
+// 
+//     @GetMapping("/htmx/pagination")
+//     public String getPagination(@RequestParam(name = "page", defaultValue = "0") int page,
+//                                 @RequestParam(name = "size", defaultValue = "5") int size, Model model) {
+//         Pageable pageable = PageRequest.of(page, size);
+//         Page<com.makariev.examples.jbang.springbootJpaJsf.Person> personPage = personRepository.findAll(pageable);
+// 
+//         model.addAttribute("totalPages", personPage.getTotalPages());
+//         model.addAttribute("currentPage", page);
+//         model.addAttribute("size", size);
+// 
+//         return "persons :: pagination(totalPages=${totalPages}, currentPage=${currentPage}, size=${size})";
+//     }
+// 
+//     @GetMapping("/htmx/form")
+//     public String showPersonForm(@RequestParam(name = "id", required = false) Long id, @RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+//         com.makariev.examples.jbang.springbootJpaJsf.Person person = id != null
+//                 ? personRepository.findById(id).orElse(new com.makariev.examples.jbang.springbootJpaJsf.Person())
+//                 : new com.makariev.examples.jbang.springbootJpaJsf.Person();
+// 
+//         model.addAttribute("person", person);
+//         model.addAttribute("editMode", id != null);
+//         model.addAttribute("currentPage", page);
+// 
+//         return "persons :: personForm(editMode=${editMode}, currentPage=${currentPage}, person=${person})";
+//     }
+// 
+//     @PostMapping("/htmx/create")
+//     public String createPerson(@ModelAttribute com.makariev.examples.jbang.springbootJpaJsf.Person person,
+//                                @RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+//         personRepository.save(person);
+//         return findAll(page, 5, model); // Return the list of persons for the current page
+//     }
+// 
+//     @PostMapping("/htmx/update")
+//     public String updatePerson(@ModelAttribute com.makariev.examples.jbang.springbootJpaJsf.Person person,
+//                                @RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+//         com.makariev.examples.jbang.springbootJpaJsf.Person existingPerson = personRepository.findById(person.getId())
+//                 .orElseThrow();
+//         existingPerson.setFirstName(person.getFirstName());
+//         existingPerson.setLastName(person.getLastName());
+//         existingPerson.setBirthYear(person.getBirthYear());
+//         personRepository.save(existingPerson);
+//         return findAll(page, 5, model); // Return the list of persons for the current page
+//     }
+// 
+//     @DeleteMapping("/htmx/{id}")
+//     public String deletePerson(@PathVariable("id") Long id, @RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+//         personRepository.deleteById(id);
+//         return findAll(page, 5, model); // Return the list of persons for the current page
+//     }
+// }
+
 @Controller
-@RequestMapping("/htmx/persons")
+@RequestMapping("/persons")
 @RequiredArgsConstructor
 class PersonApiController {
 
     private final PersonRepository personRepository;
 
-    @GetMapping("/list")
+    @GetMapping
+    public String getPersonsPage(Model model) {
+        // Initialize variables and load initial data
+        Pageable pageable = PageRequest.of(0, 5);
+        Page<com.makariev.examples.jbang.springbootJpaJsf.Person> personPage = personRepository.findAll(pageable);
+
+        model.addAttribute("persons", personPage.getContent());
+        model.addAttribute("totalPages", personPage.getTotalPages());
+        model.addAttribute("currentPage", 0);
+        model.addAttribute("size", 5);
+
+        return "persons";
+    }
+
+    @GetMapping("/htmx/list")
     public String findAll(@RequestParam(name = "page", defaultValue = "0") int page,
                           @RequestParam(name = "size", defaultValue = "5") int size, Model model) {
         Pageable pageable = PageRequest.of(page, size);
@@ -386,10 +475,10 @@ class PersonApiController {
         model.addAttribute("currentPage", page);
         model.addAttribute("size", size);
 
-        return "fragments/personRows :: personRows";
+        return "persons :: personRows";
     }
 
-    @GetMapping("/pagination")
+    @GetMapping("/htmx/pagination")
     public String getPagination(@RequestParam(name = "page", defaultValue = "0") int page,
                                 @RequestParam(name = "size", defaultValue = "5") int size, Model model) {
         Pageable pageable = PageRequest.of(page, size);
@@ -399,10 +488,10 @@ class PersonApiController {
         model.addAttribute("currentPage", page);
         model.addAttribute("size", size);
 
-        return "fragments/pagination :: pagination";
+        return "persons :: pagination";
     }
 
-    @GetMapping("/form")
+    @GetMapping("/htmx/form")
     public String showPersonForm(@RequestParam(name = "id", required = false) Long id, @RequestParam(name = "page", defaultValue = "0") int page, Model model) {
         com.makariev.examples.jbang.springbootJpaJsf.Person person = id != null
                 ? personRepository.findById(id).orElse(new com.makariev.examples.jbang.springbootJpaJsf.Person())
@@ -412,17 +501,17 @@ class PersonApiController {
         model.addAttribute("editMode", id != null);
         model.addAttribute("currentPage", page);
 
-        return "fragments/personForm :: personForm";
+        return "persons :: personForm";
     }
 
-    @PostMapping("/create")
+    @PostMapping("/htmx/create")
     public String createPerson(@ModelAttribute com.makariev.examples.jbang.springbootJpaJsf.Person person,
                                @RequestParam(name = "page", defaultValue = "0") int page, Model model) {
         personRepository.save(person);
         return findAll(page, 5, model); // Return the list of persons for the current page
     }
 
-    @PostMapping("/update")
+    @PostMapping("/htmx/update")
     public String updatePerson(@ModelAttribute com.makariev.examples.jbang.springbootJpaJsf.Person person,
                                @RequestParam(name = "page", defaultValue = "0") int page, Model model) {
         com.makariev.examples.jbang.springbootJpaJsf.Person existingPerson = personRepository.findById(person.getId())
@@ -431,6 +520,12 @@ class PersonApiController {
         existingPerson.setLastName(person.getLastName());
         existingPerson.setBirthYear(person.getBirthYear());
         personRepository.save(existingPerson);
+        return findAll(page, 5, model); // Return the list of persons for the current page
+    }
+
+    @DeleteMapping("/htmx/{id}")
+    public String deletePerson(@PathVariable("id") Long id, @RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+        personRepository.deleteById(id);
         return findAll(page, 5, model); // Return the list of persons for the current page
     }
 }
