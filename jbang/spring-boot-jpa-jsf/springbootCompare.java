@@ -26,8 +26,7 @@
 //SOURCES Person.java
 //SOURCES PersonRepository.java
 
-//SOURCES PersonApiController.java
-
+//SOURCES HtmxPersonController.java
 //SOURCES VuePersonController.java
 //SOURCES FacesPersonBean.java
 

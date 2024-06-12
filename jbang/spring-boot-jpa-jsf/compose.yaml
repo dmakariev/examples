@@ -11,6 +11,8 @@ services:
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=pass-example
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - JOINFACES_FACES_SERVLET_ENABLED=true
+      - JOINFACES_FACES_AUTOMATIC_EXTENSIONLESS_MAPPING=true
     networks:
       - spring-postgres
   db:

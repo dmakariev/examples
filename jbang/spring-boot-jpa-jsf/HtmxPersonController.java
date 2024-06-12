@@ -1,5 +1,5 @@
 //DEPS org.springframework.boot:spring-boot-starter-thymeleaf
-//FILES templates/persons.html=persons.html
+//FILES templates/person-crud-htmx.html=person-crud-htmx.html
 
 package com.makariev.examples.jbang;
 
@@ -21,9 +21,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 
 @Controller
-@RequestMapping("/persons")
+@RequestMapping("/person-crud-htmx")
 @RequiredArgsConstructor
-public class PersonApiController {
+public class HtmxPersonController {
 
     private final PersonRepository personRepository;
 
@@ -38,7 +38,7 @@ public class PersonApiController {
         model.addAttribute("currentPage", 0);
         model.addAttribute("size", 5);
 
-        return "persons";
+        return "person-crud-htmx";
     }
 
     @GetMapping("/htmx/list")
@@ -52,7 +52,7 @@ public class PersonApiController {
         model.addAttribute("currentPage", page);
         model.addAttribute("size", size);
 
-        return "persons :: personRows";
+        return "person-crud-htmx :: personRows";
     }
 
     @GetMapping("/htmx/pagination")
@@ -65,7 +65,7 @@ public class PersonApiController {
         model.addAttribute("currentPage", page);
         model.addAttribute("size", size);
 
-        return "persons :: pagination";
+        return "person-crud-htmx :: pagination";
     }
 
     @GetMapping("/htmx/form")
@@ -78,7 +78,7 @@ public class PersonApiController {
         model.addAttribute("editMode", id != null);
         model.addAttribute("currentPage", page);
 
-        return "persons :: personForm";
+        return "person-crud-htmx :: personForm";
     }
 
     @PostMapping("/htmx/create")
