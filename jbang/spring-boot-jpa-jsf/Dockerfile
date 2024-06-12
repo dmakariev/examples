@@ -6,7 +6,7 @@ RUN mkdir /app
 WORKDIR /app
 COPY . /app
 
-RUN curl -Ls https://sh.jbang.dev | bash -s - export portable springbootCompare.java
+RUN --mount=type=cache,target=/root/.m2 curl -Ls https://sh.jbang.dev | bash -s - export portable springbootCompare.java
 
 FROM public.ecr.aws/docker/library/amazoncorretto:22-alpine
 RUN mkdir /app/
