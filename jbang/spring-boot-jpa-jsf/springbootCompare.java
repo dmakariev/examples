@@ -10,7 +10,6 @@
 //DEPS org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0
 //DEPS org.slf4j:slf4j-simple
 
-//DEPS org.joinfaces:faces-spring-boot-starter:5.3.0
 //DEPS org.mvnpm:simpledotcss:2.3.1
 //DEPS org.webjars.npm:picocss__pico:2.0.6
 
@@ -20,15 +19,18 @@
 //JAVA_OPTIONS -Dspring.datasource.url=jdbc:h2:mem:person-db;MODE=PostgreSQL;
 //JAVA_OPTIONS -Dspring.h2.console.enabled=true -Dspring.h2.console.settings.web-allow-others=true
 //JAVA_OPTIONS -Dmanagement.endpoints.web.exposure.include=health,env,loggers
-//JAVA_OPTIONS -Djoinfaces.faces-servlet.enabled=true
-//JAVA_OPTIONS -Djoinfaces.faces.automatic-extensionless-mapping=true
+
 //FILES META-INF/resources/index.html=index-fetch.html
-//FILES META-INF/resources/hello.xhtml=hello.xhtml
-//FILES META-INF/resources/person.xhtml=person.xhtml
+
 
 //FILES templates/persons.html=persons.html
 
 //REPOS mavencentral,sb_snapshot=https://repo.spring.io/snapshot,sb_milestone=https://repo.spring.io/milestone
+
+
+//SOURCES PersonBean.java
+//SOURCES Person.java
+//SOURCES PersonRepository.java
 package com.makariev.examples.jbang;
 
 import org.springframework.boot.SpringApplication;
@@ -88,190 +90,12 @@ import java.io.Serializable;
 
 @SpringBootApplication
 @ComponentScan(basePackages = "com.makariev.examples.jbang")
-public class springbootJpaJsf {
+public class springbootCompare {
 
     public static void main(String[] args) {
-        SpringApplication.run(springbootJpaJsf.class, args);
+        SpringApplication.run(springbootCompare.class, args);
     }
     
-@Component("helloBean")
-public static class HelloBean {
-
-    private String name;
-    private String message;
-
-    public String getHello() {
-        return "Hello world, from JSF!";
-    }
-
-    public void createMessage() {
-        message = "Hello, " + name + "!";
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-}
-
-//@org.springframework.context.annotation.Scope("view")
-//@ViewScoped
-//@RequestScope
-@Component("personBean")
-@SessionScope
-@Getter
-@Setter
-public class PersonBean implements Serializable {
-    private final PersonRepository personRepository;
-    private List<Person> persons;
-    private Person formData;
-    private boolean editMode;
-    private Long editedPersonId;
-    private int pageSize = 5;
-    private int currentPage = 1;
-    private long totalPages;
-
-    public PersonBean(PersonRepository personRepository) {
-        this.personRepository = personRepository;
-    }
-
-    @PostConstruct
-    public void init() {
-        formData = new Person();
-        loadPersons();
-    }
-
-    public void loadPersons() {
-        var page = personRepository.findAll(PageRequest.of(currentPage - 1, pageSize));
-        persons = page.getContent();
-        totalPages = page.getTotalPages();
-    }
-
-    public void create() {
-        formData = new Person();
-        editMode = false;
-        executeScript("showPersonDialog()");
-    }
-
-    public void save() {
-        System.out.println("Entering save method");
-
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        List<FacesMessage> messages = new ArrayList<>();
-
-        if (facesContext == null) {
-            System.out.println("FacesContext is null");
-        } else {
-            System.out.println("FacesContext is available");
-        }
-
-        if (formData.getFirstName() == null || formData.getFirstName().isEmpty()) {
-            System.out.println("First name is null or empty");
-            messages.add(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Validation Error", "First Name is required."));
-        }
-
-        if (formData.getLastName() == null || formData.getLastName().isEmpty()) {
-            System.out.println("Last name is null or empty");
-            messages.add(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Validation Error", "Last Name is required."));
-        }
-
-        if (formData.getBirthYear() == null || formData.getBirthYear() <= 0) {
-            System.out.println("Birth year is null or less than or equal to 0");
-            messages.add(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Validation Error", "Birth Year must be a positive number."));
-        }
-
-        if (!messages.isEmpty()) {
-            for (FacesMessage message : messages) {
-                facesContext.addMessage(null, message);
-            }
-            return;
-        }
-
-        if (editMode) {
-            System.out.println("Edit mode: updating existing person");
-            Person person = personRepository.findById(editedPersonId).orElseThrow();
-            person.setFirstName(formData.getFirstName());
-            person.setLastName(formData.getLastName());
-            person.setBirthYear(formData.getBirthYear());
-            personRepository.save(person);
-        } else {
-            System.out.println("Create mode: saving new person");
-            personRepository.save(formData);
-        }
-
-        loadPersons();
-        formData = new Person();
-        System.out.println("Exiting save method");
-        executeScript("closeDialog()");
-    }
-
-    public void edit(Person person) {
-        System.out.println("Editing person: " + person);
-        this.formData = person;
-        this.editMode = true;
-        this.editedPersonId = person.getId();
-        recreateView();
-        executeScript("showPersonDialog()");
-    }
-
-    public void delete(Person person) {
-        personRepository.delete(person);
-        loadPersons();
-    }
-
-    public void changePage(int page) {
-        currentPage = page;
-        loadPersons();
-    }
-
-    public List<Integer> getPageNumbers() {
-        List<Integer> pageNumbers = new ArrayList<>();
-        for (int i = 1; i <= totalPages; i++) {
-            pageNumbers.add(i);
-        }
-        return pageNumbers;
-    }
-
-    private void executeScript(String script) {
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        facesContext.getPartialViewContext().getEvalScripts().add(script);
-    }
-
-    public void recreateView() {
-        FacesContext context = FacesContext.getCurrentInstance();
-        String viewId = context.getViewRoot().getViewId();
-        ViewHandler handler = context.getApplication().getViewHandler();
-        UIViewRoot root = handler.createView(context, viewId);
-        root.setViewId(viewId);
-        context.setViewRoot(root);
-    }
-}
-
-
-@Data
-@Entity
-@Table(name = "person")
-@NoArgsConstructor
-@AllArgsConstructor
-public static class Person {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String firstName;
-    private String lastName;
-    private Integer birthYear;
-}
-
-
 
 @Component
 @RequiredArgsConstructor
@@ -293,16 +117,6 @@ public static class InitialRecords {
                 new Person(5L, "Grace", "Hopper", 1906),
                 new Person(6L, "John", "Backus", 1924)
         ).forEach(personRepository::save);
-    }
-}
-
-@Slf4j
-@RestController
-public static class HiController {
-
-    @GetMapping("/hi")
-    public String sayHi(@RequestParam(required = false, defaultValue = "World") String name) {
-        return "Hello, " + name + "!";
     }
 }
 
@@ -347,9 +161,6 @@ public static class PersonController {
 
 }
 
-interface PersonRepository extends JpaRepository<com.makariev.examples.jbang.springbootJpaJsf.Person, Long> {
-}
-
 
 ////////
 
@@ -364,7 +175,7 @@ class PersonApiController {
     public String getPersonsPage(Model model) {
         // Initialize variables and load initial data
         Pageable pageable = PageRequest.of(0, 5);
-        Page<com.makariev.examples.jbang.springbootJpaJsf.Person> personPage = personRepository.findAll(pageable);
+        Page<Person> personPage = personRepository.findAll(pageable);
 
         model.addAttribute("persons", personPage.getContent());
         model.addAttribute("totalPages", personPage.getTotalPages());
@@ -378,7 +189,7 @@ class PersonApiController {
     public String findAll(@RequestParam(name = "page", defaultValue = "0") int page,
                           @RequestParam(name = "size", defaultValue = "5") int size, Model model) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<com.makariev.examples.jbang.springbootJpaJsf.Person> personPage = personRepository.findAll(pageable);
+        Page<Person> personPage = personRepository.findAll(pageable);
 
         model.addAttribute("persons", personPage.getContent());
         model.addAttribute("totalPages", personPage.getTotalPages());
@@ -392,7 +203,7 @@ class PersonApiController {
     public String getPagination(@RequestParam(name = "page", defaultValue = "0") int page,
                                 @RequestParam(name = "size", defaultValue = "5") int size, Model model) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<com.makariev.examples.jbang.springbootJpaJsf.Person> personPage = personRepository.findAll(pageable);
+        Page<Person> personPage = personRepository.findAll(pageable);
 
         model.addAttribute("totalPages", personPage.getTotalPages());
         model.addAttribute("currentPage", page);
@@ -403,9 +214,9 @@ class PersonApiController {
 
     @GetMapping("/htmx/form")
     public String showPersonForm(@RequestParam(name = "id", required = false) Long id, @RequestParam(name = "page", defaultValue = "0") int page, Model model) {
-        com.makariev.examples.jbang.springbootJpaJsf.Person person = id != null
-                ? personRepository.findById(id).orElse(new com.makariev.examples.jbang.springbootJpaJsf.Person())
-                : new com.makariev.examples.jbang.springbootJpaJsf.Person();
+        Person person = id != null
+                ? personRepository.findById(id).orElse(new Person())
+                : new Person();
 
         model.addAttribute("person", person);
         model.addAttribute("editMode", id != null);
@@ -415,16 +226,16 @@ class PersonApiController {
     }
 
     @PostMapping("/htmx/create")
-    public String createPerson(@ModelAttribute com.makariev.examples.jbang.springbootJpaJsf.Person person,
+    public String createPerson(@ModelAttribute Person person,
                                @RequestParam(name = "page", defaultValue = "0") int page, Model model) {
         personRepository.save(person);
         return findAll(page, 5, model); // Return the list of persons for the current page
     }
 
     @PostMapping("/htmx/update")
-    public String updatePerson(@ModelAttribute com.makariev.examples.jbang.springbootJpaJsf.Person person,
+    public String updatePerson(@ModelAttribute Person person,
                                @RequestParam(name = "page", defaultValue = "0") int page, Model model) {
-        com.makariev.examples.jbang.springbootJpaJsf.Person existingPerson = personRepository.findById(person.getId())
+        Person existingPerson = personRepository.findById(person.getId())
                 .orElseThrow();
         existingPerson.setFirstName(person.getFirstName());
         existingPerson.setLastName(person.getLastName());

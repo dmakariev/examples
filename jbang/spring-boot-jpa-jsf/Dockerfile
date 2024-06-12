@@ -6,13 +6,13 @@ RUN mkdir /app
 WORKDIR /app
 COPY . /app
 
-RUN curl -Ls https://sh.jbang.dev | bash -s - export portable springbootJpaVue.java
+RUN curl -Ls https://sh.jbang.dev | bash -s - export portable springbootCompare.java
 
 FROM public.ecr.aws/docker/library/amazoncorretto:22-alpine
 RUN mkdir /app/
 RUN mkdir /app/lib
-COPY --from=build /app/springbootJpaVue.jar /app/springbootJpaVue.jar
+COPY --from=build /app/springbootCompare.jar /app/springbootCompare.jar
 COPY --from=build /app/lib/* /app/lib/
 WORKDIR /app
 
-ENTRYPOINT ["java","-jar","springbootJpaVue.jar"]
+ENTRYPOINT ["java","-jar","springbootCompare.jar"]
