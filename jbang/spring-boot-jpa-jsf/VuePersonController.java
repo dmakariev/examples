@@ -1,4 +1,4 @@
-//FILES META-INF/resources/index.html=index-fetch.html
+//FILES META-INF/resources/person-crud-vue.html=person-crud-vue.html
 
 package com.makariev.examples.jbang;
 
@@ -19,7 +19,7 @@ import org.springframework.data.domain.Pageable;
 @RestController
 @RequestMapping("/api/persons")
 @RequiredArgsConstructor
-public class PersonController {
+public class VuePersonController {
 
     private final PersonRepository personRepository;
 

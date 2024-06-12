@@ -18,13 +18,15 @@
 //JAVA_OPTIONS -Dspring.h2.console.enabled=true -Dspring.h2.console.settings.web-allow-others=true
 //JAVA_OPTIONS -Dmanagement.endpoints.web.exposure.include=health,env,loggers
 
+//FILES META-INF/resources/index.html=index.html
+
 //REPOS mavencentral,sb_snapshot=https://repo.spring.io/snapshot,sb_milestone=https://repo.spring.io/milestone
 
 //SOURCES PersonBean.java
 //SOURCES Person.java
 //SOURCES PersonRepository.java
 //SOURCES PersonApiController.java
-//SOURCES PersonController.java
+//SOURCES VuePersonController.java
 
 package com.makariev.examples.jbang;
 
