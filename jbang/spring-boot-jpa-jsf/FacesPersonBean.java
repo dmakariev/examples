@@ -2,7 +2,7 @@
 
 //JAVA_OPTIONS -Djoinfaces.faces-servlet.enabled=true
 //JAVA_OPTIONS -Djoinfaces.faces.automatic-extensionless-mapping=true
-//FILES META-INF/resources/person.xhtml=person.xhtml
+//FILES META-INF/resources/person-crud-faces.xhtml=person-crud-faces.xhtml
 
 package com.makariev.examples.jbang;
 
@@ -29,7 +29,7 @@ import java.io.Serializable;
 @SessionScope
 @Getter
 @Setter
-public class PersonBean implements Serializable {
+public class FacesPersonBean implements Serializable {
     private final PersonRepository personRepository;
     private List<Person> persons;
     private Person formData;
@@ -39,7 +39,7 @@ public class PersonBean implements Serializable {
     private int currentPage = 1;
     private long totalPages;
 
-    public PersonBean(PersonRepository personRepository) {
+    public FacesPersonBean(PersonRepository personRepository) {
         this.personRepository = personRepository;
     }
 

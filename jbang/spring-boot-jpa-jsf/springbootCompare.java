@@ -22,11 +22,14 @@
 
 //REPOS mavencentral,sb_snapshot=https://repo.spring.io/snapshot,sb_milestone=https://repo.spring.io/milestone
 
-//SOURCES PersonBean.java
+
 //SOURCES Person.java
 //SOURCES PersonRepository.java
+
 //SOURCES PersonApiController.java
+
 //SOURCES VuePersonController.java
+//SOURCES FacesPersonBean.java
 
 package com.makariev.examples.jbang;
 
