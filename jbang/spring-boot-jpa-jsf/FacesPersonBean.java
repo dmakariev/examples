@@ -22,9 +22,6 @@ import jakarta.faces.component.UIViewRoot;
 import jakarta.faces.application.ViewHandler;
 import java.io.Serializable;
 
-//@org.springframework.context.annotation.Scope("view")
-//@ViewScoped
-//@RequestScope
 @Component("personBean")
 @SessionScope
 @Getter
@@ -118,7 +115,6 @@ public class FacesPersonBean implements Serializable {
         this.formData = person;
         this.editMode = true;
         this.editedPersonId = person.getId();
-        recreateView();
         executeScript("showPersonDialog()");
     }
 
@@ -145,12 +141,4 @@ public class FacesPersonBean implements Serializable {
         facesContext.getPartialViewContext().getEvalScripts().add(script);
     }
 
-    public void recreateView() {
-        FacesContext context = FacesContext.getCurrentInstance();
-        String viewId = context.getViewRoot().getViewId();
-        ViewHandler handler = context.getApplication().getViewHandler();
-        UIViewRoot root = handler.createView(context, viewId);
-        root.setViewId(viewId);
-        context.setViewRoot(root);
-    }
 }
