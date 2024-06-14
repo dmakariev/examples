@@ -42,7 +42,7 @@
             </table>
             <nav id="pagination-nav" style="display: flex; justify-content: center; margin-top: 20px;" th:fragment="pagination(totalPages, currentPage, size)">
                 <ul style="display: flex; list-style: none; padding: 0;">
-                    <li th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}">
+                    <li th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}" style="margin: 0px 5px;">
                         <a href="#" th:text="${pageNum + 1}"
                            th:attr="hx-get=@{/person-crud-htmx/htmx/list(page=${pageNum}, size=${size})}"
                            hx-target="#persons-list"
