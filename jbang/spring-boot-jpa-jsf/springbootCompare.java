@@ -10,9 +10,6 @@
 //DEPS org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0
 //DEPS org.slf4j:slf4j-simple
 
-//DEPS org.mvnpm:simpledotcss:2.3.1
-//DEPS org.webjars.npm:picocss__pico:2.0.6
-
 //JAVA_OPTIONS -Dserver.port=8080
 //JAVA_OPTIONS -Dspring.datasource.url=jdbc:h2:mem:person-db;MODE=PostgreSQL;
 //JAVA_OPTIONS -Dspring.h2.console.enabled=true -Dspring.h2.console.settings.web-allow-others=true

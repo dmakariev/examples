@@ -1,4 +1,5 @@
 //DEPS org.joinfaces:faces-spring-boot-starter:5.3.0
+//DEPS org.mvnpm:simpledotcss:2.3.1
 
 //JAVA_OPTIONS -Djoinfaces.faces-servlet.enabled=true
 //JAVA_OPTIONS -Djoinfaces.faces.automatic-extensionless-mapping=true

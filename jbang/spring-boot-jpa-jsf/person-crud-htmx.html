@@ -2,8 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Person CRUD Application</title>
-    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
-    <script src="https://unpkg.com/htmx.org@1.9.12/dist/htmx.js" integrity="sha384-qbtR4rS9RrUMECUWDWM2+YGgN3U4V4ZncZ0BvUcg9FGct0jqXz3PUdVpU1p0yrXS" crossorigin="anonymous"></script>
+    <!-- <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css"> -->
+    <link rel="stylesheet" th:href="@{_static/simpledotcss/2.3.1/simple.css}" />
+    <!-- <script src="https://unpkg.com/htmx.org@1.9.12/dist/htmx.js" integrity="sha384-qbtR4rS9RrUMECUWDWM2+YGgN3U4V4ZncZ0BvUcg9FGct0jqXz3PUdVpU1p0yrXS" crossorigin="anonymous"></script> -->
+    <script th:src="@{webjars/github-com-bigskysoftware-htmx/1.9.12/htmx.min.js}"></script>
     <style>
         button + button {
             margin-left: 10px;

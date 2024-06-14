@@ -1,4 +1,7 @@
 //DEPS org.springframework.boot:spring-boot-starter-thymeleaf
+//DEPS org.webjars.npm:github-com-bigskysoftware-htmx:1.9.12
+//DEPS org.mvnpm:simpledotcss:2.3.1
+
 //FILES templates/person-crud-htmx.html=person-crud-htmx.html
 
 package com.makariev.examples.jbang;
