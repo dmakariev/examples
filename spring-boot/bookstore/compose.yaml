@@ -16,6 +16,14 @@ services:
       - MANAGEMENT_TRACING_SAMPLING_PROBABILITY=1.0
       - MANAGEMENT_TRACING_ENABLED=true
       - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://zipkin:9411/api/v2/spans
+    deploy:
+      resources:
+        limits:
+          cpus: 2.0
+          memory: 512M
+        reservations:
+          cpus: 0.5
+          memory: 256M      
     networks:
       - bookstore-spring-postgres
   db:

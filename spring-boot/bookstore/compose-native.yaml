@@ -15,7 +15,15 @@ services:
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
       - MANAGEMENT_TRACING_SAMPLING_PROBABILITY=1.0
       - MANAGEMENT_TRACING_ENABLED=false
-      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://zipkin:9411/api/v2/spans     
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://zipkin:9411/api/v2/spans
+    deploy:
+      resources:
+        limits:
+          cpus: 1.0
+          memory: 128M
+        reservations:
+          cpus: 0.5
+          memory: 64M           
     networks:
       - bookstore-spring-postgres
   db:
