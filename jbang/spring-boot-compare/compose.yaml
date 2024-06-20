@@ -15,6 +15,14 @@ services:
       - JOINFACES_FACES_AUTOMATIC_EXTENSIONLESS_MAPPING=true
       - SPRING_H2_CONSOLE_ENABLED=true
       - SPRING_H2_CONSOLE_SETTINGS_WEB_ALLOW_OTHERS=true
+    deploy:
+      resources:
+        limits:
+          cpus: 1.0
+          memory: 640M
+        reservations:
+          cpus: 0.5
+          memory: 256M       
     networks:
       - spring-postgres
   db:
