@@ -13,6 +13,14 @@ services:
       - SPRING_H2_CONSOLE_ENABLED=false
       - SPRING_SQL_INIT_PLATFORM=postgresql
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    deploy:
+      resources:
+        limits:
+          cpus: 2.0
+          memory: 512M
+        reservations:
+          cpus: 0.5
+          memory: 256M      
     networks:
       - person-spring-postgres
   db:

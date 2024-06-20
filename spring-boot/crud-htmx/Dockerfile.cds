@@ -7,7 +7,7 @@ COPY .mvn .mvn
 COPY pom.xml .
 COPY src src
 
-RUN --mount=type=cache,target=/root/.m2 ./mvnw clean package -DskipTests -Penhance
+RUN --mount=type=cache,target=/root/.m2 ./mvnw clean package -DskipTests
 
 FROM ghcr.io/bell-sw/liberica-openjdk-alpine-musl:21-cds as optimizer
 WORKDIR /workspace/app

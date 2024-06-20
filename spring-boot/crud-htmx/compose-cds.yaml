@@ -1,8 +1,8 @@
 services:
   backend:
-    image: person_backend:alpine3
+    image: person_backend:liberica-cds
     build: 
-      dockerfile: ./Dockerfile.native    
+      dockerfile: ./Dockerfile.cds    
     ports:
       - 8080:8088
     environment:
@@ -20,7 +20,7 @@ services:
           memory: 512M
         reservations:
           cpus: 0.5
-          memory: 256M            
+          memory: 256M      
     networks:
       - person-spring-postgres
   db:
@@ -49,7 +49,15 @@ services:
       - "5050:80"
     networks:
       - person-spring-postgres
-    restart: always 
+    restart: always
+  zipkin:
+    container_name: zipkin
+    image: openzipkin/zipkin
+    extra_hosts: [ 'host.docker.internal:host-gateway' ]
+    ports:
+      - "9411:9411"
+    networks:
+      - person-spring-postgres  
 volumes:
   person-db-data:
   person-pgadmin:
