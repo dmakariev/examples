@@ -7,7 +7,7 @@ COPY .mvn .mvn
 COPY pom.xml .
 COPY src src
 
-RUN --mount=type=cache,target=/root/.m2 ./mvnw clean package -DskipTests
+RUN --mount=type=cache,target=/root/.m2 ./mvnw clean compile spring-boot:process-aot package -DskipTests
 
 FROM ghcr.io/bell-sw/liberica-openjdk-alpine-musl:21-cds as optimizer
 WORKDIR /workspace/app
@@ -15,7 +15,7 @@ COPY --from=build /workspace/app/target/*.jar application.jar
 
 RUN java -Djarmode=tools -jar application.jar extract --destination application
 WORKDIR /workspace/app/application
-RUN java -XX:ArchiveClassesAtExit=application.jsa -Dspring.context.exit=onRefresh -jar application.jar
+RUN java -Dspring.aot.enabled=true -XX:ArchiveClassesAtExit=application.jsa -Dspring.context.exit=onRefresh -jar application.jar
 
 FROM ghcr.io/bell-sw/liberica-openjdk-alpine-musl:21-cds
 
@@ -27,4 +27,4 @@ COPY --from=optimizer ${DEPENDENCY}/application/application.jsa /app/application
 
 WORKDIR /app/application
 
-ENTRYPOINT ["java", "-XX:SharedArchiveFile=application.jsa", "-jar", "application.jar"]
+ENTRYPOINT ["java", "-Dspring.aot.enabled=true","-XX:SharedArchiveFile=application.jsa", "-jar", "application.jar"]
