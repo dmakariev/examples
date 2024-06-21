@@ -1,0 +1,69 @@
+crud-htmx
+    Dockerfile
+       cpu:1.0 memory:512M
+           Started CrudHtmxApplication in 6.493 seconds (process running for 6.899)
+           http://localhost:8080/person-crud-htmx
+                   Average:	0.1196 secs
+              Requests/sec:	418.6827
+           http://localhost:8080/api/persons
+                   Average:	0.1011 secs
+              Requests/sec:	494.8035         
+       cpu:0.5 memory:160M
+           Started CrudHtmxApplication in 22.898 seconds (process running for 23.814)
+           http://localhost:8080/person-crud-htmx
+                   Average:	1.0190 secs
+              Requests/sec:	49.2932
+           http://localhost:8080/api/persons
+                   Average:	0.6976 secs
+              Requests/sec:	71.8548         
+    Dockerfile.cds
+       cpu:1.0 memory:512M
+           Started CrudHtmxApplication in 3.871 seconds (process running for 4.117)
+           http://localhost:8080/person-crud-htmx
+                   Average:	0.1355 secs
+              Requests/sec:	369.0820
+           http://localhost:8080/api/persons
+                   Average:	0.0983 secs
+              Requests/sec:	509.7108         
+       cpu:0.5 memory:160M
+           Started CrudHtmxApplication in 13.582 seconds (process running for 14.107)
+           http://localhost:8080/person-crud-htmx
+                   Average:	0.8546 secs
+              Requests/sec:	58.9894
+           http://localhost:8080/api/persons
+                   Average:	0.4833 secs
+              Requests/sec:	103.8122                    
+    Dockerfile.cds ( no spring-boot:process-aot )
+       cpu:1.0 memory:512M
+           Started CrudHtmxApplication in 4.592 seconds (process running for 4.877)
+           http://localhost:8080/person-crud-htmx
+                   Average:	0.1234 secs
+              Requests/sec:	405.7420
+           http://localhost:8080/api/persons
+                   Average:	0.1072 secs
+              Requests/sec:	466.8502   
+       cpu:0.5 memory:160M
+           Started CrudHtmxApplication in 15.919 seconds (process running for 16.36)
+           http://localhost:8080/person-crud-htmx
+                   Average:	0.7149 secs
+              Requests/sec:	70.2904
+           http://localhost:8080/api/persons
+                   Average:	0.6674 secs
+              Requests/sec:	75.3208
+    Dockerfile.native
+       cpu:1.0 memory:512M
+           Started CrudHtmxApplication in 0.3 seconds (process running for 0.303)
+           http://localhost:8080/person-crud-htmx
+                   Average:	0.0583 secs
+              Requests/sec:	856.8795
+           http://localhost:8080/api/persons
+                   Average:	0.0307 secs
+              Requests/sec:	1629.4684
+       cpu:0.5 memory:64M
+           Started CrudHtmxApplication in 1.212 seconds (process running for 1.241)
+           http://localhost:8080/person-crud-htmx
+                   Average:	0.2530 secs
+              Requests/sec:	197.5363
+           http://localhost:8080/api/persons
+                   Average:	0.1786 secs
+              Requests/sec:	279.9620                                           
