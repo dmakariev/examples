@@ -4,6 +4,7 @@
 //DEPS org.springframework.boot:spring-boot-starter-web
 //DEPS org.springframework.boot:spring-boot-starter-data-jpa
 //DEPS org.springframework.boot:spring-boot-starter-actuator
+//DEPS org.springframework.session:spring-session-jdbc
 //DEPS com.h2database:h2
 //DEPS org.postgresql:postgresql
 //DEPS org.projectlombok:lombok
@@ -14,6 +15,9 @@
 //JAVA_OPTIONS -Dspring.datasource.url=jdbc:h2:mem:person-db;MODE=PostgreSQL;
 //JAVA_OPTIONS -Dspring.h2.console.enabled=true -Dspring.h2.console.settings.web-allow-others=true
 //JAVA_OPTIONS -Dmanagement.endpoints.web.exposure.include=health,env,loggers
+
+//JAVA_OPTIONS -Dspring.session.store-type=jdbc
+//JAVA_OPTIONS -Dspring.session.jdbc.initialize-schema=always
 
 //FILES META-INF/resources/index.html=index.html
 

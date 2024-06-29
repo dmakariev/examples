@@ -1,8 +1,11 @@
 services:
   backend:
-    image: spring-boot-jpa-vue_backend:aws-alpine
+    image: spring-boot-jpa-vue_backend:cds-alpine
     build: 
-      dockerfile: ./Dockerfile    
+      dockerfile: ./Dockerfile.cds
+      platforms:
+        - "linux/amd64"
+        - "linux/arm64"          
     ports:
       - 8080:8088
     environment:
@@ -13,8 +16,10 @@ services:
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
       - JOINFACES_FACES_SERVLET_ENABLED=true
       - JOINFACES_FACES_AUTOMATIC_EXTENSIONLESS_MAPPING=true
-      - SPRING_H2_CONSOLE_ENABLED=true
-      - SPRING_H2_CONSOLE_SETTINGS_WEB_ALLOW_OTHERS=true
+      - SPRING_H2_CONSOLE_ENABLED=false
+      - SPRING_H2_CONSOLE_SETTINGS_WEB_ALLOW_OTHERS=false
+      - SPRING_SESSION_STORE_TYPE=jdbc
+      - SPRING_SESSION_JDBC_INITIALIZE_SCHEMA=always
     deploy:
       resources:
         limits:
@@ -22,7 +27,7 @@ services:
           memory: 640M
         reservations:
           cpus: 0.5
-          memory: 256M       
+          memory: 640M       
     networks:
       - spring-postgres
   db:

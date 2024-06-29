@@ -1,10 +1,8 @@
 //DEPS org.joinfaces:faces-spring-boot-starter:5.3.0
 //DEPS org.mvnpm:simpledotcss:2.3.1
-
 //JAVA_OPTIONS -Djoinfaces.faces-servlet.enabled=true
 //JAVA_OPTIONS -Djoinfaces.faces.automatic-extensionless-mapping=true
 //FILES META-INF/resources/person-crud-faces.xhtml=person-crud-faces.xhtml
-
 package com.makariev.examples.jbang;
 
 import org.springframework.web.context.annotation.SessionScope;
@@ -28,7 +26,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 public class FacesPersonBean implements Serializable {
-    private final PersonRepository personRepository;
+
     private List<Person> persons;
     private Person formData;
     private boolean editMode;
@@ -37,10 +35,6 @@ public class FacesPersonBean implements Serializable {
     private int currentPage = 1;
     private long totalPages;
 
-    public FacesPersonBean(PersonRepository personRepository) {
-        this.personRepository = personRepository;
-    }
-
     @PostConstruct
     public void init() {
         formData = new Person();
@@ -48,7 +42,7 @@ public class FacesPersonBean implements Serializable {
     }
 
     public void loadPersons() {
-        var page = personRepository.findAll(PageRequest.of(currentPage - 1, pageSize));
+        var page = personRepository().findAll(PageRequest.of(currentPage - 1, pageSize));
         persons = page.getContent();
         totalPages = page.getTotalPages();
     }
@@ -95,14 +89,14 @@ public class FacesPersonBean implements Serializable {
 
         if (editMode) {
             System.out.println("Edit mode: updating existing person");
-            Person person = personRepository.findById(editedPersonId).orElseThrow();
+            Person person = personRepository().findById(editedPersonId).orElseThrow();
             person.setFirstName(formData.getFirstName());
             person.setLastName(formData.getLastName());
             person.setBirthYear(formData.getBirthYear());
-            personRepository.save(person);
+            personRepository().save(person);
         } else {
             System.out.println("Create mode: saving new person");
-            personRepository.save(formData);
+            personRepository().save(formData);
         }
 
         loadPersons();
@@ -120,7 +114,7 @@ public class FacesPersonBean implements Serializable {
     }
 
     public void delete(Person person) {
-        personRepository.delete(person);
+        personRepository().delete(person);
         loadPersons();
     }
 
@@ -140,6 +134,16 @@ public class FacesPersonBean implements Serializable {
     private void executeScript(String script) {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         facesContext.getPartialViewContext().getEvalScripts().add(script);
+    }
+    
+    private static PersonRepository personRepository(){
+        return (PersonRepository) findBean("personRepository");
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> T findBean(String beanName) {
+        FacesContext context = FacesContext.getCurrentInstance();
+        return (T) context.getApplication().evaluateExpressionGet(context, "#{" + beanName + "}", Object.class);
     }
 
 }
