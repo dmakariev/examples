@@ -16,7 +16,11 @@
             <h1>Person CRUD Application</h1>
         </header>
         <main>
-            <button th:attr="hx-get=@{/person-crud-htmx/htmx/form(page=${currentPage})}" hx-target="#person-dialog" hx-trigger="click">Add Person</button>
+            <button 
+                th:attr="hx-get=@{/person-crud-htmx/htmx/form(page=${currentPage})}" 
+                hx-target="#person-dialog" 
+                hx-trigger="click"
+                >Add Person</button>
             <table>
                 <thead>
                     <tr>
@@ -56,7 +60,9 @@
         </footer>
 
         <!-- Dialog -->
-        <dialog id="person-dialog">
+        <dialog id="person-dialog" 
+                hx-on:htmx:after-swap="this.showModal()"
+                hx-on:htmx:before-request="this.close()">
             <!-- Person Form Fragment -->
             <form th:fragment="personForm(editMode, currentPage, person)"
                   th:action="@{${editMode} ? '/person-crud-htmx/htmx/update' : '/person-crud-htmx/htmx/create'}"
@@ -89,19 +95,5 @@
             </form>
         </dialog>
     </div>
-
-    <script>
-        document.body.addEventListener('htmx:afterSwap', (event) => {
-            if (event.detail.target.id === "person-dialog") {
-                document.getElementById('person-dialog').showModal();
-            }
-        });
-
-        document.body.addEventListener('htmx:beforeRequest', (event) => {
-            if (event.detail.elt.closest('#person-dialog')) {
-                document.getElementById('person-dialog').close();
-            }
-        });
-    </script>
 </body>
 </html>
