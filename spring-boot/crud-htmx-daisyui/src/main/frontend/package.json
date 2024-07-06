@@ -2,7 +2,8 @@
     "name": "frontend",
     "private": true,
     "scripts": {
-        "build": "tailwindcss -i ./main.css -o ../resources/static/main.css"
+        "build": "tailwindcss -i ./main.css -o ../resources/static/main.css",
+        "buildminify": "tailwindcss -i ./main.css -o ../resources/static/main.css --minify"
     },
     "devDependencies": {
         "daisyui": "^4.12.10",
