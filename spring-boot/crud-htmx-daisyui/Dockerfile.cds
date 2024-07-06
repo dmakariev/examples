@@ -7,7 +7,7 @@ COPY .mvn .mvn
 COPY pom.xml .
 COPY src src
 
-RUN --mount=type=cache,target=/root/.m2 ./mvnw clean compile spring-boot:process-aot package -DskipTests
+RUN --mount=type=cache,target=/root/.m2 ./mvnw clean compile spring-boot:process-aot package -DskipTests -DskipFrontend
 
 FROM ghcr.io/bell-sw/liberica-openjdk-alpine-musl:22-cds as optimizer
 WORKDIR /workspace/app

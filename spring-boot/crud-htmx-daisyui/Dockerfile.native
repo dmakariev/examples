@@ -6,7 +6,7 @@ COPY .mvn .mvn
 COPY pom.xml .
 COPY src src
 
-RUN --mount=type=cache,target=/root/.m2 ./mvnw clean package -DskipTests -Pnative,enhance native:compile
+RUN --mount=type=cache,target=/root/.m2 ./mvnw clean package -DskipTests -DskipFrontend -Pnative,enhance native:compile
 
 # Add a step to list the contents of the target directory
 RUN ls -l /workspace/app/target
