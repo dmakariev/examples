@@ -5,6 +5,7 @@
         "build": "tailwindcss -i ./main.css -o ../resources/static/main.css"
     },
     "devDependencies": {
+        "daisyui": "^4.12.10",
         "tailwindcss": "^3.4.4"
     }
 }
