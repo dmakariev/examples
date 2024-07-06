@@ -5,3 +5,4 @@ target/
 /java-core/crawler/nbproject/
 /spring-boot/bookstore/nbproject/
 node_modules
+spring-boot/crud-htmx-daisyui/src/main/frontend/node
