@@ -1,0 +1,21 @@
+FROM ghcr.io/graalvm/native-image-community:22 as build
+WORKDIR /workspace/app
+
+COPY mvnw .
+COPY .mvn .mvn
+COPY pom.xml .
+COPY src src
+
+RUN --mount=type=cache,target=/root/.m2 ./mvnw clean package -DskipTests -Pnative,enhance native:compile
+
+# Add a step to list the contents of the target directory
+RUN ls -l /workspace/app/target
+
+FROM ghcr.io/linuxcontainers/alpine:3.20
+VOLUME /tmp
+
+# Install libc6-compat for dynamic linking
+RUN apk add --no-cache libc6-compat
+
+COPY --from=build /workspace/app/target/crud-htmx-daisyui /app/crud-htmx-daisyui
+ENTRYPOINT ["/app/crud-htmx"]
