@@ -6,17 +6,18 @@
     <script th:src="@{/webjars/github-com-bigskysoftware-htmx/1.9.12/htmx.min.js}"></script>
 </head>
 <body>
-    <div id="app">
-        <header>
-            <h1>Person CRUD Application</h1>
+    <div id="app" class="grid grid-cols-6 gap-4">
+        <header class="col-start-2 col-span-4 navbar bg-base-100">
+            <h1 class="text-4xl font-bold">Person CRUD Application</h1>
         </header>
-        <main>
+        <main class="col-start-2 col-span-4">
             <button
                 th:attr="hx-get=@{/person-crud-htmx/htmx/form(page=${currentPage})}" 
                 hx-target="#person-dialog" 
                 hx-trigger="click"
+                class="btn btn-primary"
                 >Add Person</button>
-            <table>
+            <table class="table table-zebra">
                 <thead>
                     <tr>
                         <th>First Name</th>
@@ -33,12 +34,14 @@
                         <td>
                             <button th:attr="hx-get=@{/person-crud-htmx/htmx/form(id=${person.id},page=${currentPage})}" 
                                     hx-target="#person-dialog" 
-                                    hx-trigger="click">Edit</button>
+                                    hx-trigger="click"
+                                    class="btn btn-primary btn-sm">Edit</button>
                             <button th:attr="hx-delete=@{/person-crud-htmx/htmx/{id}(id=${person.id})}" 
                                     hx-confirm="Are you sure you wish to delete?"
                                     hx-target="#persons-list" 
                                     hx-swap="outerHTML" 
-                                    hx-trigger="click">Delete</button>
+                                    hx-trigger="click"
+                                    class="btn btn-warning btn-sm">Delete</button>
                         </td>
                     </tr>
                 </tbody>
@@ -56,12 +59,13 @@
                 </ul>
             </nav>
         </main>
-        <footer>
+        <footer class="col-start-2 col-span-4">
             <p>&copy; 2024 Person CRUD Application. All rights reserved.</p>
         </footer>
 
         <!-- Dialog -->
         <dialog id="person-dialog" 
+                class="modal"
                 hx-on:htmx:after-swap="this.showModal()"
                 hx-on:htmx:before-request="this.close()">
             <!-- Person Form Fragment -->
@@ -70,31 +74,32 @@
                   th:attr="hx-post=@{${editMode} ? '/person-crud-htmx/htmx/update' : '/person-crud-htmx/htmx/create'}"
                   hx-target="#persons-list"
                   hx-swap="outerHTML"
-                  method="post">
+                  method="post"
+                  class="modal-box">
                 
                 <input type="hidden" th:if="${editMode}" th:value="${person?.id}" name="id"/>
                 <input type="hidden" th:if="${editMode}" name="_method" value="put"/>
                 <input type="hidden" name="page" th:value="${currentPage}"/>
                 
-                <h2 th:text="${editMode} ? 'Edit' : 'Add' + ' Person'"></h2>
+                <h2 class="text-lg font-bold" th:text="${editMode} ? 'Edit' : 'Add' + ' Person'"></h2>
                 
                 <fieldset>
-                    <label for="firstName">First Name</label>
+                    <label for="firstName" class="label">First Name</label>
                     <input type="text" id="firstName" name="firstName" th:value="${person?.firstName}" placeholder="First Name" required
                            class="input input-bordered w-full">
                     
-                    <label for="lastName">Last Name</label>
+                    <label for="lastName" class="label">Last Name</label>
                     <input type="text" id="lastName" name="lastName" th:value="${person?.lastName}" placeholder="Last Name" required
                            class="input input-bordered w-full">
                     
-                    <label for="birthYear">Year of Birth</label>
+                    <label for="birthYear" class="label">Year of Birth</label>
                     <input type="number" id="birthYear" name="birthYear" th:value="${person?.birthYear}" placeholder="Year of birth" required
                            class="input input-bordered w-full">
                 </fieldset>
                 
-                <menu>
-                    <button type="submit" th:text="${editMode} ? 'Update' : 'Add'"></button>
-                    <button type="button" onclick="document.getElementById('person-dialog').close()">Cancel</button>
+                <menu class="modal-action">
+                    <button type="submit" th:text="${editMode} ? 'Update' : 'Add'" class="btn btn-primary"></button>
+                    <button type="button" onclick="document.getElementById('person-dialog').close()" class="btn btn-primary btn-outline">Cancel</button>
                 </menu>
             </form>
         </dialog>
