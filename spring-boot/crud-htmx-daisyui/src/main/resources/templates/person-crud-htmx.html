@@ -4,11 +4,6 @@
     <title>Person CRUD Application</title>
     <link rel="stylesheet" th:href="@{/main.css}" />
     <script th:src="@{/webjars/github-com-bigskysoftware-htmx/1.9.12/htmx.min.js}"></script>
-    <style>
-        button + button {
-            margin-left: 10px;
-        }
-    </style>
 </head>
 <body>
     <div id="app">
@@ -36,8 +31,14 @@
                         <td th:text="${person.lastName}">Last Name</td>
                         <td th:text="${person.birthYear}">Year of Birth</td>
                         <td>
-                            <button th:attr="hx-get=@{/person-crud-htmx/htmx/form(id=${person.id},page=${currentPage})}" hx-target="#person-dialog" hx-trigger="click">Edit</button>
-                            <button th:attr="hx-delete=@{/person-crud-htmx/htmx/{id}(id=${person.id})}" hx-target="#persons-list" hx-swap="outerHTML" hx-trigger="click">Delete</button>
+                            <button th:attr="hx-get=@{/person-crud-htmx/htmx/form(id=${person.id},page=${currentPage})}" 
+                                    hx-target="#person-dialog" 
+                                    hx-trigger="click">Edit</button>
+                            <button th:attr="hx-delete=@{/person-crud-htmx/htmx/{id}(id=${person.id})}" 
+                                    hx-confirm="Are you sure you wish to delete?"
+                                    hx-target="#persons-list" 
+                                    hx-swap="outerHTML" 
+                                    hx-trigger="click">Delete</button>
                         </td>
                     </tr>
                 </tbody>
@@ -79,13 +80,16 @@
                 
                 <fieldset>
                     <label for="firstName">First Name</label>
-                    <input type="text" id="firstName" name="firstName" th:value="${person?.firstName}" placeholder="First Name" required>
+                    <input type="text" id="firstName" name="firstName" th:value="${person?.firstName}" placeholder="First Name" required
+                           class="input input-bordered w-full">
                     
                     <label for="lastName">Last Name</label>
-                    <input type="text" id="lastName" name="lastName" th:value="${person?.lastName}" placeholder="Last Name" required>
+                    <input type="text" id="lastName" name="lastName" th:value="${person?.lastName}" placeholder="Last Name" required
+                           class="input input-bordered w-full">
                     
                     <label for="birthYear">Year of Birth</label>
-                    <input type="number" id="birthYear" name="birthYear" th:value="${person?.birthYear}" placeholder="Year of birth" required>
+                    <input type="number" id="birthYear" name="birthYear" th:value="${person?.birthYear}" placeholder="Year of birth" required
+                           class="input input-bordered w-full">
                 </fieldset>
                 
                 <menu>

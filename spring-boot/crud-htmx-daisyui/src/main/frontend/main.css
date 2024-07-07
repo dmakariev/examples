@@ -34,9 +34,6 @@ dialog{
     label{
         @apply label;
     }
-    input{
-        @apply input input-bordered w-full max-w-xs;
-    }
 }
 h1{
     @apply text-4xl font-bold;
