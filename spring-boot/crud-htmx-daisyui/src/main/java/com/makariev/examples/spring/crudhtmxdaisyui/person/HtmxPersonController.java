@@ -1,5 +1,7 @@
 package com.makariev.examples.spring.crudhtmxdaisyui.person;
 
+import java.util.Arrays;
+import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,8 +14,8 @@ import org.springframework.ui.Model;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @Controller
 @RequestMapping("/person-crud-htmx")
@@ -24,10 +26,46 @@ public class HtmxPersonController {
 
     @GetMapping
     public String getPersonsPage(Model model) {
+        //available themes 
+        final List<String> themes = Arrays.asList(
+                "light",
+                "dark",
+                "cupcake",
+                "bumblebee",
+                "emerald",
+                "corporate",
+                "synthwave",
+                "retro",
+                "cyberpunk",
+                "valentine",
+                "halloween",
+                "garden",
+                "forest",
+                "aqua",
+                "lofi",
+                "pastel",
+                "fantasy",
+                "wireframe",
+                "black",
+                "luxury",
+                "dracula",
+                "cmyk",
+                "autumn",
+                "business",
+                "acid",
+                "lemonade",
+                "night",
+                "coffee",
+                "winter",
+                "dim",
+                "nord",
+                "sunset"
+        );
         // Initialize variables and load initial data
         Pageable pageable = PageRequest.of(0, 5);
         Page<Person> personPage = personRepository.findAll(pageable);
 
+        //model.addAttribute("themes", themes);
         model.addAttribute("persons", personPage.getContent());
         model.addAttribute("totalPages", personPage.getTotalPages());
         model.addAttribute("currentPage", 0);
@@ -49,10 +87,9 @@ public class HtmxPersonController {
 //
 //        return "person-crud-htmx :: personRows";
 //    }
-    
     @GetMapping("/htmx/main")
     public String findAll(@RequestParam(name = "page", defaultValue = "0") int page,
-                          @RequestParam(name = "size", defaultValue = "5") int size, Model model) {
+            @RequestParam(name = "size", defaultValue = "5") int size, Model model) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Person> personPage = personRepository.findAll(pageable);
 
@@ -76,7 +113,6 @@ public class HtmxPersonController {
 //
 //        return "person-crud-htmx :: pagination";
 //    }
-
     @GetMapping("/htmx/form")
     public String showPersonForm(@RequestParam(name = "id", required = false) Long id, @RequestParam(name = "page", defaultValue = "0") int page, Model model) {
         Person person = id != null
@@ -92,14 +128,14 @@ public class HtmxPersonController {
 
     @PostMapping("/htmx/create")
     public String createPerson(@ModelAttribute Person person,
-                               @RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+            @RequestParam(name = "page", defaultValue = "0") int page, Model model) {
         personRepository.save(person);
         return findAll(page, 5, model); // Return the list of persons for the current page
     }
 
     @PostMapping("/htmx/update")
     public String updatePerson(@ModelAttribute Person person,
-                               @RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+            @RequestParam(name = "page", defaultValue = "0") int page, Model model) {
         Person existingPerson = personRepository.findById(person.getId())
                 .orElseThrow();
         existingPerson.setFirstName(person.getFirstName());

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" ><!-- data-theme="cupcake" -->
     <head>
         <title>Person CRUD Application</title>
         <link rel="stylesheet" th:href="@{/main.css}" />
@@ -8,7 +8,34 @@
     <body>
         <div id="app" class="grid grid-cols-6 gap-4">
             <header class="col-start-2 col-span-4 navbar bg-base-100">
-                <h1 class="text-4xl font-bold">Person CRUD Application</h1>
+                <div class="flex-1">
+                    <h1 class="text-4xl font-bold">Person CRUD Application</h1>
+                </div>
+                <div class="flex-none">
+                    <ul th:if="${not #lists.isEmpty(themes)}"
+                        class="menu menu-horizontal px-1 z-50">
+                        <li>
+                            <details>
+                                <summary>Theme Controller</summary>
+                                <ul class="bg-base-100 rounded-t-none p-2">
+                                    <li>
+                                        <label class="label cursor-pointer gap-4">
+                                            <span class="label-text">Default</span>
+                                            <input type="radio" name="theme-radios" class="radio theme-controller" value="default" />
+                                        </label>
+                                    </li>
+                                    <li th:each="theme : ${themes}">
+                                        <label class="label cursor-pointer gap-4">
+                                            <span class="label-text" th:text="${theme}"></span>
+                                            <input type="radio" name="theme-radios" class="radio theme-controller" 
+                                                   th:value="${theme}" />
+                                        </label>
+                                    </li>
+                                </ul>
+                            </details>
+                        </li>
+                    </ul>
+                </div>
             </header>
             <main class="col-start-2 col-span-4" id="main" th:fragment="main">
                 <button
