@@ -1,108 +1,106 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Person CRUD Application</title>
-    <link rel="stylesheet" th:href="@{/main.css}" />
-    <script th:src="@{/webjars/github-com-bigskysoftware-htmx/1.9.12/htmx.min.js}"></script>
-</head>
-<body>
-    <div id="app" class="grid grid-cols-6 gap-4">
-        <header class="col-start-2 col-span-4 navbar bg-base-100">
-            <h1 class="text-4xl font-bold">Person CRUD Application</h1>
-        </header>
-        <main class="col-start-2 col-span-4">
-            <button
-                th:attr="hx-get=@{/person-crud-htmx/htmx/form(page=${currentPage})}" 
-                hx-target="#person-dialog" 
-                hx-trigger="click"
-                class="btn btn-primary"
-                >Add Person</button>
-            <table class="table table-zebra">
-                <thead>
-                    <tr>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Year of Birth</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="persons-list" th:fragment="personRows(persons, currentPage)">
-                    <tr th:each="person : ${persons}">
-                        <td th:text="${person.firstName}">First Name</td>
-                        <td th:text="${person.lastName}">Last Name</td>
-                        <td th:text="${person.birthYear}">Year of Birth</td>
-                        <td>
-                            <button th:attr="hx-get=@{/person-crud-htmx/htmx/form(id=${person.id},page=${currentPage})}" 
-                                    hx-target="#person-dialog" 
-                                    hx-trigger="click"
-                                    class="btn btn-primary btn-sm">Edit</button>
-                            <button th:attr="hx-delete=@{/person-crud-htmx/htmx/{id}(id=${person.id})}" 
-                                    hx-confirm="Are you sure you wish to delete?"
-                                    hx-target="#persons-list" 
-                                    hx-swap="outerHTML" 
-                                    hx-trigger="click"
-                                    class="btn btn-warning btn-sm">Delete</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <nav id="pagination-nav" style="display: flex; justify-content: center; margin-top: 20px;" th:fragment="pagination(totalPages, currentPage, size)">
-                <ul style="display: flex; list-style: none; padding: 0;">
-                    <li th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}" style="margin: 0px 5px;">
-                        <a href="#" th:text="${pageNum + 1}"
-                           th:attr="hx-get=@{/person-crud-htmx/htmx/list(page=${pageNum}, size=${size})}"
-                           hx-target="#persons-list"
-                           hx-swap="outerHTML"
-                           hx-trigger="click"
-                           th:style="${pageNum == currentPage} ? 'font-weight: bold;' : ''"></a>
-                    </li>
-                </ul>
-            </nav>
-        </main>
-        <footer class="col-start-2 col-span-4">
-            <p>&copy; 2024 Person CRUD Application. All rights reserved.</p>
-        </footer>
+    <head>
+        <title>Person CRUD Application</title>
+        <link rel="stylesheet" th:href="@{/main.css}" />
+        <script th:src="@{/webjars/github-com-bigskysoftware-htmx/1.9.12/htmx.min.js}"></script>
+    </head>
+    <body>
+        <div id="app" class="grid grid-cols-6 gap-4">
+            <header class="col-start-2 col-span-4 navbar bg-base-100">
+                <h1 class="text-4xl font-bold">Person CRUD Application</h1>
+            </header>
+            <main class="col-start-2 col-span-4" id="main" th:fragment="main">
+                <button
+                    th:attr="hx-get=@{/person-crud-htmx/htmx/form(page=${currentPage})}" 
+                    hx-target="#person-dialog" 
+                    hx-trigger="click"
+                    class="btn btn-primary"
+                    >Add Person</button>
+                <table class="table table-zebra">
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Year of Birth</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="persons-list" th:fragment="personRows(persons, currentPage)">
+                        <tr th:each="person : ${persons}">
+                            <td th:text="${person.firstName}">First Name</td>
+                            <td th:text="${person.lastName}">Last Name</td>
+                            <td th:text="${person.birthYear}">Year of Birth</td>
+                            <td>
+                                <button th:attr="hx-get=@{/person-crud-htmx/htmx/form(id=${person.id},page=${currentPage})}" 
+                                        hx-target="#person-dialog" 
+                                        hx-trigger="click"
+                                        class="btn btn-primary btn-sm">Edit</button>
+                                <button th:attr="hx-delete=@{/person-crud-htmx/htmx/{id}(id=${person.id})}" 
+                                        hx-confirm="Are you sure you wish to delete?"
+                                        hx-target="#main" 
+                                        hx-swap="outerHTML" 
+                                        hx-trigger="click"
+                                        class="btn btn-warning btn-sm">Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="pagination-nav" class="join w-full justify-center" th:fragment="pagination(totalPages, currentPage, size)">
+                    <a th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
+                       href="#" 
+                       th:text="${pageNum + 1}"
+                       th:attr="hx-get=@{/person-crud-htmx/htmx/main(page=${pageNum}, size=${size})}"
+                       hx-target="#main"
+                       hx-swap="outerHTML"
+                       hx-trigger="click"
+                       th:class="${pageNum == currentPage} ? 'join-item btn btn-sm btn-active' : 'join-item btn btn-sm'"></a>
+                </div>
+            </main>
+            <footer class="col-start-2 col-span-4">
+                <p>&copy; 2024 Person CRUD Application. All rights reserved.</p>
+            </footer>
 
-        <!-- Dialog -->
-        <dialog id="person-dialog" 
-                class="modal"
-                hx-on:htmx:after-swap="this.showModal()"
-                hx-on:htmx:before-request="this.close()">
-            <!-- Person Form Fragment -->
-            <form th:fragment="personForm(editMode, currentPage, person)"
-                  th:action="@{${editMode} ? '/person-crud-htmx/htmx/update' : '/person-crud-htmx/htmx/create'}"
-                  th:attr="hx-post=@{${editMode} ? '/person-crud-htmx/htmx/update' : '/person-crud-htmx/htmx/create'}"
-                  hx-target="#persons-list"
-                  hx-swap="outerHTML"
-                  method="post"
-                  class="modal-box">
-                
-                <input type="hidden" th:if="${editMode}" th:value="${person?.id}" name="id"/>
-                <input type="hidden" th:if="${editMode}" name="_method" value="put"/>
-                <input type="hidden" name="page" th:value="${currentPage}"/>
-                
-                <h2 class="text-lg font-bold" th:text="${editMode} ? 'Edit' : 'Add' + ' Person'"></h2>
-                
-                <fieldset>
-                    <label for="firstName" class="label">First Name</label>
-                    <input type="text" id="firstName" name="firstName" th:value="${person?.firstName}" placeholder="First Name" required
-                           class="input input-bordered w-full">
-                    
-                    <label for="lastName" class="label">Last Name</label>
-                    <input type="text" id="lastName" name="lastName" th:value="${person?.lastName}" placeholder="Last Name" required
-                           class="input input-bordered w-full">
-                    
-                    <label for="birthYear" class="label">Year of Birth</label>
-                    <input type="number" id="birthYear" name="birthYear" th:value="${person?.birthYear}" placeholder="Year of birth" required
-                           class="input input-bordered w-full">
-                </fieldset>
-                
-                <menu class="modal-action">
-                    <button type="submit" th:text="${editMode} ? 'Update' : 'Add'" class="btn btn-primary"></button>
-                    <button type="button" onclick="document.getElementById('person-dialog').close()" class="btn btn-primary btn-outline">Cancel</button>
-                </menu>
-            </form>
-        </dialog>
-    </div>
-</body>
+            <!-- Dialog -->
+            <dialog id="person-dialog" 
+                    class="modal"
+                    hx-on:htmx:after-swap="this.showModal()"
+                    hx-on:htmx:before-request="this.close()">
+                <!-- Person Form Fragment -->
+                <form th:fragment="personForm(editMode, currentPage, person)"
+                      th:action="@{${editMode} ? '/person-crud-htmx/htmx/update' : '/person-crud-htmx/htmx/create'}"
+                      th:attr="hx-post=@{${editMode} ? '/person-crud-htmx/htmx/update' : '/person-crud-htmx/htmx/create'}"
+                      hx-target="#main"
+                      hx-swap="outerHTML"
+                      method="post"
+                      class="modal-box">
+
+                    <input type="hidden" th:if="${editMode}" th:value="${person?.id}" name="id"/>
+                    <input type="hidden" th:if="${editMode}" name="_method" value="put"/>
+                    <input type="hidden" name="page" th:value="${currentPage}"/>
+
+                    <h2 class="text-lg font-bold" th:text="${editMode} ? 'Edit' : 'Add' + ' Person'"></h2>
+
+                    <fieldset>
+                        <label for="firstName" class="label">First Name</label>
+                        <input type="text" id="firstName" name="firstName" th:value="${person?.firstName}" placeholder="First Name" required
+                               class="input input-bordered w-full">
+
+                        <label for="lastName" class="label">Last Name</label>
+                        <input type="text" id="lastName" name="lastName" th:value="${person?.lastName}" placeholder="Last Name" required
+                               class="input input-bordered w-full">
+
+                        <label for="birthYear" class="label">Year of Birth</label>
+                        <input type="number" id="birthYear" name="birthYear" th:value="${person?.birthYear}" placeholder="Year of birth" required
+                               class="input input-bordered w-full">
+                    </fieldset>
+
+                    <menu class="modal-action">
+                        <button type="submit" th:text="${editMode} ? 'Update' : 'Add'" class="btn btn-primary"></button>
+                        <button type="button" onclick="document.getElementById('person-dialog').close()" class="btn btn-primary btn-outline">Cancel</button>
+                    </menu>
+                </form>
+            </dialog>
+        </div>
+    </body>
 </html>

@@ -36,7 +36,21 @@ public class HtmxPersonController {
         return "person-crud-htmx";
     }
 
-    @GetMapping("/htmx/list")
+//    @GetMapping("/htmx/list")
+//    public String findList(@RequestParam(name = "page", defaultValue = "0") int page,
+//                          @RequestParam(name = "size", defaultValue = "5") int size, Model model) {
+//        Pageable pageable = PageRequest.of(page, size);
+//        Page<Person> personPage = personRepository.findAll(pageable);
+//
+//        model.addAttribute("persons", personPage.getContent());
+//        model.addAttribute("totalPages", personPage.getTotalPages());
+//        model.addAttribute("currentPage", page);
+//        model.addAttribute("size", size);
+//
+//        return "person-crud-htmx :: personRows";
+//    }
+    
+    @GetMapping("/htmx/main")
     public String findAll(@RequestParam(name = "page", defaultValue = "0") int page,
                           @RequestParam(name = "size", defaultValue = "5") int size, Model model) {
         Pageable pageable = PageRequest.of(page, size);
@@ -47,21 +61,21 @@ public class HtmxPersonController {
         model.addAttribute("currentPage", page);
         model.addAttribute("size", size);
 
-        return "person-crud-htmx :: personRows";
+        return "person-crud-htmx :: main";
     }
 
-    @GetMapping("/htmx/pagination")
-    public String getPagination(@RequestParam(name = "page", defaultValue = "0") int page,
-                                @RequestParam(name = "size", defaultValue = "5") int size, Model model) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Person> personPage = personRepository.findAll(pageable);
-
-        model.addAttribute("totalPages", personPage.getTotalPages());
-        model.addAttribute("currentPage", page);
-        model.addAttribute("size", size);
-
-        return "person-crud-htmx :: pagination";
-    }
+//    @GetMapping("/htmx/pagination")
+//    public String getPagination(@RequestParam(name = "page", defaultValue = "0") int page,
+//                                @RequestParam(name = "size", defaultValue = "5") int size, Model model) {
+//        Pageable pageable = PageRequest.of(page, size);
+//        Page<Person> personPage = personRepository.findAll(pageable);
+//
+//        model.addAttribute("totalPages", personPage.getTotalPages());
+//        model.addAttribute("currentPage", page);
+//        model.addAttribute("size", size);
+//
+//        return "person-crud-htmx :: pagination";
+//    }
 
     @GetMapping("/htmx/form")
     public String showPersonForm(@RequestParam(name = "id", required = false) Long id, @RequestParam(name = "page", defaultValue = "0") int page, Model model) {
