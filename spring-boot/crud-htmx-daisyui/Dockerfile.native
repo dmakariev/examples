@@ -18,4 +18,4 @@ VOLUME /tmp
 RUN apk add --no-cache libc6-compat
 
 COPY --from=build /workspace/app/target/crud-htmx-daisyui /app/crud-htmx-daisyui
-ENTRYPOINT ["/app/crud-htmx"]
+ENTRYPOINT ["/app/crud-htmx-daisyui"]
