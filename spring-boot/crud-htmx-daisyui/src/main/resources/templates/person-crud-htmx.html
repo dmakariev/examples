@@ -3,13 +3,15 @@
     <head>
         <title>Person CRUD Application</title>
         <link rel="stylesheet" th:href="@{/main.css}" />
-        <script th:src="@{/webjars/github-com-bigskysoftware-htmx/1.9.12/htmx.min.js}"></script>
+        <script th:src="@{/webjars/htmx.org/2.0.0/dist/htmx.min.js}"></script>
+        <link rel="stylesheet" th:href="@{/webjars/shoelace-style__shoelace/2.15.1/cdn/themes/light.css}" />
+        <script type="module" th:src="@{/webjars/shoelace-style__shoelace/2.15.1/cdn/shoelace-autoloader.js}"></script>
     </head>
     <body>
         <div id="app" class="grid grid-cols-6 gap-4">
             <header class="col-start-2 col-span-4 navbar bg-base-100">
                 <div class="flex-1">
-                    <h1 class="text-4xl font-bold">Person CRUD Application</h1>
+                    <h1 class="text-4xl font-bold">Person CRUD Application</h1> 
                 </div>
                 <div class="flex-none">
                     <ul th:if="${not #lists.isEmpty(themes)}"
@@ -44,6 +46,7 @@
                     hx-trigger="click"
                     class="btn btn-primary"
                     >Add Person</button>
+                <sl-button th:text="'Click me '+${currentPage}">Click me</sl-button>
                 <table class="table table-zebra">
                     <thead>
                         <tr>
@@ -108,18 +111,30 @@
 
                     <h2 class="text-lg font-bold" th:text="${editMode} ? 'Edit' : 'Add' + ' Person'"></h2>
 
+                    <sl-input name="firstName" label="First Name" required
+                              th:value="${person?.firstName}" placeholder="First Name"
+                              ></sl-input>
+                    <sl-input name="lastName" label="Last Name" required
+                              th:value="${person?.lastName}" placeholder="Last Name"
+                              ></sl-input>
+                    
+                    <sl-input name="birthYear" label="Year of Birth" required
+                              type="number"
+                              th:value="${person?.birthYear}" placeholder="Year of birth"
+                              ></sl-input>
+
                     <fieldset>
-                        <label for="firstName" class="label">First Name</label>
+<!--                        <label for="firstName" class="label">First Name</label>
                         <input type="text" id="firstName" name="firstName" th:value="${person?.firstName}" placeholder="First Name" required
                                class="input input-bordered w-full">
 
                         <label for="lastName" class="label">Last Name</label>
                         <input type="text" id="lastName" name="lastName" th:value="${person?.lastName}" placeholder="Last Name" required
-                               class="input input-bordered w-full">
+                               class="input input-bordered w-full">-->
 
-                        <label for="birthYear" class="label">Year of Birth</label>
+<!--                        <label for="birthYear" class="label">Year of Birth</label>
                         <input type="number" id="birthYear" name="birthYear" th:value="${person?.birthYear}" placeholder="Year of birth" required
-                               class="input input-bordered w-full">
+                               class="input input-bordered w-full">-->
                     </fieldset>
 
                     <menu class="modal-action">
