@@ -19,7 +19,7 @@ services:
     networks:
       - bookstore-spring-postgres
   db:
-    image: postgres:16
+    image: postgres:17
     restart: always
     volumes:
       - bookstore-db-data:/var/lib/postgresql/data
@@ -32,7 +32,7 @@ services:
       - 5432
   pgadmin:
     container_name: bookstore-pgadmin
-    image: dpage/pgadmin4:8.5
+    image: dpage/pgadmin4:8.14
     environment:
       PGADMIN_DEFAULT_EMAIL: admin_not_used@user.com
       PGADMIN_DEFAULT_PASSWORD: admin_not_used
