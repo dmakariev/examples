@@ -68,6 +68,12 @@ multipass info spring-vm
 ```
 Note the IP address (e.g., 192.168.64.2).
 
+Check Logs for Troubleshooting
+```sh
+multipass info spring-vm
+multipass exec spring-vm -- journalctl -xe
+```
+
 Access the VM:
 ```sh
 multipass shell spring-vm
