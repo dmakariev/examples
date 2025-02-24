@@ -148,3 +148,5 @@ Test SSH Access From your local machine:
 ssh ubuntu@192.168.64.2
 ```
 If you set up SSH keys correctly, you should log in without entering a password.
+
+### install Kamal 2

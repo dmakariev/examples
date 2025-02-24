@@ -1,0 +1,71 @@
+service: bookstore
+
+
+image: dmakariev/bookstore
+
+servers:
+  web:
+    - ubuntu@192.168.67.2
+
+ssh:
+  user: ubuntu
+
+proxy:
+  ssl: false
+#  app_port: 8088
+
+registry:
+  server: ghcr.io
+  username: $MY_GITHUB_USERNAME
+  password:
+    - MY_GITHUB_PAT
+
+builder:
+  arch:
+    - amd64
+    - arm64
+
+env:
+  clear:
+    SERVER_PORT: "8080"
+    SPRING_DATASOURCE_URL: "jdbc:postgresql://db:5432/bookstore"
+    SPRING_DATASOURCE_USERNAME: "postgres"
+    SPRING_DATASOURCE_PASSWORD: "bookstore"
+    SPRING_H2_CONSOLE_ENABLED: "false"
+    SPRING_SQL_INIT_PLATFORM: "postgresql"
+    SPRING_JPA_HIBERNATE_DDL_AUTO: "update"
+    MANAGEMENT_TRACING_SAMPLING_PROBABILITY: "1.0"
+    MANAGEMENT_TRACING_ENABLED: "true"
+    MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: "http://zipkin:9411/api/v2/spans"
+
+accessories:
+  db:
+    image: postgres:17
+    host: ubuntu@192.168.67.2
+    port: 5432
+    env:
+      clear:
+        POSTGRES_DB: "bookstore"
+        POSTGRES_PASSWORD: "bookstore"
+    volumes:
+      - bookstore-db-data:/var/lib/postgresql/data
+  pgadmin:
+    image: dpage/pgadmin4:8.14
+    host: ubuntu@192.168.67.2
+    port: 5050
+    env:
+      clear:
+        PGADMIN_DEFAULT_EMAIL: "admin_not_used@user.com"
+        PGADMIN_DEFAULT_PASSWORD: "admin_not_used"
+        PGADMIN_CONFIG_SERVER_MODE: "False"
+        PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+    volumes:
+      - bookstore-pgadmin:/var/lib/pgadmin
+  zipkin:
+    image: openzipkin/zipkin
+    host: ubuntu@192.168.67.2
+    port: 9411
+
+volumes:
+  - bookstore-db-data
+  - bookstore-pgadmin
