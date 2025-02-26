@@ -1,4 +1,4 @@
-FROM ghcr.io/bell-sw/liberica-openjdk-alpine-musl:21 as build
+FROM ghcr.io/bell-sw/liberica-openjdk-alpine-musl:21 AS build
 WORKDIR /workspace/app
 
 COPY mvnw .

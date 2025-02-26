@@ -12,9 +12,8 @@
             <li><a href="./actuator">/actuator</a></li>
             <li><a href="./actuator/health">/actuator/health</a></li>
             <li><a href="./h2-console">/h2-console</a></li>
-            <li><a href="http://localhost:5050">pgAdmin</a></li>
-            <li><a href="http://localhost:9411/zipkin/?serviceName=bookstore">Zipkin</a></li>
-
+            <li><a id="pgAdmin-link" href="#">pgAdmin</a></li>
+            <li><a id="zipkin-link" href="#">Zipkin</a></li>
         </ul>
         <p>API:</p>
         <ul>
@@ -24,5 +23,15 @@
             <li><a href="./api/inventory">/api/inventory</a></li>
             <li><a href="./api/books/summaries">/api/books/summaries</a></li>
         </ul>
+
+        <script>
+            // Get the host and protocol dynamically
+            const host = window.location.hostname;
+            const protocol = window.location.protocol;
+
+            // Set the href dynamically
+            document.getElementById("pgAdmin-link").href = `${protocol}//${host}:5050`;
+            document.getElementById("zipkin-link").href = `${protocol}//${host}:9411/zipkin/?serviceName=bookstore`;
+        </script>
     </body>
 </html>

@@ -81,7 +81,7 @@ multipass shell spring-vm
 
  Install SSH on the VM:
 ```sh
-sudo apt update
+sudo apt update && sudo apt upgrade -y
 sudo apt install -y openssh-server
 sudo systemctl enable ssh
 sudo systemctl start ssh
@@ -149,4 +149,19 @@ ssh ubuntu@192.168.64.2
 ```
 If you set up SSH keys correctly, you should log in without entering a password.
 
+#### install docker
+
+Update system, install and enable `docker`,add `ubuntu` user to the `docker` Group
+```sh
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y docker.io
+sudo systemctl enable --now docker
+sudo usermod -aG docker ubuntu
+newgrp docker
+```
+
 ### install Kamal 2
+If you have a Ruby environment available, you can install Kamal globally with:
+```sh
+gem install kamal
+```

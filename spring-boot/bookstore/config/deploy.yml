@@ -1,34 +1,35 @@
 service: bookstore
-
-
 image: dmakariev/bookstore
 
 servers:
   web:
-    - ubuntu@192.168.67.2
+    - 192.168.67.9
 
 ssh:
   user: ubuntu
 
 proxy:
   ssl: false
-#  app_port: 8088
+  app_port: 80
+  healthcheck:
+    path: /actuator/health
+    interval: 3    # Integer, seconds
+    timeout: 40    # Integer, seconds
 
 registry:
   server: ghcr.io
   username: $MY_GITHUB_USERNAME
   password:
-    - MY_GITHUB_PAT
+    - MY_GITHUB_PAT  # Adjust based on your secrets setup
 
 builder:
   arch:
-    - amd64
     - arm64
 
 env:
   clear:
-    SERVER_PORT: "8080"
-    SPRING_DATASOURCE_URL: "jdbc:postgresql://db:5432/bookstore"
+    SERVER_PORT: "80"
+    SPRING_DATASOURCE_URL: "jdbc:postgresql://bookstore-db:5432/bookstore"  # Changed to match container name
     SPRING_DATASOURCE_USERNAME: "postgres"
     SPRING_DATASOURCE_PASSWORD: "bookstore"
     SPRING_H2_CONSOLE_ENABLED: "false"
@@ -36,13 +37,13 @@ env:
     SPRING_JPA_HIBERNATE_DDL_AUTO: "update"
     MANAGEMENT_TRACING_SAMPLING_PROBABILITY: "1.0"
     MANAGEMENT_TRACING_ENABLED: "true"
-    MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: "http://zipkin:9411/api/v2/spans"
+    MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: "http://bookstore-zipkin:9411/api/v2/spans"  # Updated to match container name
 
 accessories:
   db:
     image: postgres:17
-    host: ubuntu@192.168.67.2
-    port: 5432
+    host: 192.168.67.9
+    port: "5432:5432"
     env:
       clear:
         POSTGRES_DB: "bookstore"
@@ -51,8 +52,8 @@ accessories:
       - bookstore-db-data:/var/lib/postgresql/data
   pgadmin:
     image: dpage/pgadmin4:8.14
-    host: ubuntu@192.168.67.2
-    port: 5050
+    host: 192.168.67.9
+    port: "5050:80"
     env:
       clear:
         PGADMIN_DEFAULT_EMAIL: "admin_not_used@user.com"
@@ -63,8 +64,8 @@ accessories:
       - bookstore-pgadmin:/var/lib/pgadmin
   zipkin:
     image: openzipkin/zipkin
-    host: ubuntu@192.168.67.2
-    port: 9411
+    host: 192.168.67.9
+    port: "9411:9411"
 
 volumes:
   - bookstore-db-data
