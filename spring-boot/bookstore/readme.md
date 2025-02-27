@@ -171,3 +171,11 @@ should include ***LABEL service="bookstore"***
 ```sh
 docker buildx build --platform linux/amd64,linux/arm64 -t ghcr.io/dmakariev/bookstore:1.0.0 --push .
 ```
+
+### using kamal 2
+
+kamal remove
+kamal setup -P --version=1.0.0
+kamal setup --version=1.2.0
+kamal deploy -P --version=1.0.0
+kamal deploy --version=1.1.0

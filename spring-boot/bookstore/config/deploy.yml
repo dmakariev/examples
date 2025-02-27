@@ -29,7 +29,7 @@ builder:
 env:
   clear:
     SERVER_PORT: "80"
-    SPRING_DATASOURCE_URL: "jdbc:postgresql://bookstore-db:5432/bookstore"  # Changed to match container name
+    SPRING_DATASOURCE_URL: "jdbc:postgresql://192.168.67.11:5432/bookstore"  # Changed to match container name
     SPRING_DATASOURCE_USERNAME: "postgres"
     SPRING_DATASOURCE_PASSWORD: "bookstore"
     SPRING_H2_CONSOLE_ENABLED: "false"
@@ -37,12 +37,12 @@ env:
     SPRING_JPA_HIBERNATE_DDL_AUTO: "update"
     MANAGEMENT_TRACING_SAMPLING_PROBABILITY: "1.0"
     MANAGEMENT_TRACING_ENABLED: "true"
-    MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: "http://bookstore-zipkin:9411/api/v2/spans"  # Updated to match container name
+    MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: "http://192.168.67.10:9411/api/v2/spans"  # Updated to match container name
 
 accessories:
   db:
     image: postgres:17
-    host: 192.168.67.9
+    host: 192.168.67.11
     port: "5432:5432"
     env:
       clear:
@@ -52,7 +52,7 @@ accessories:
       - bookstore-db-data:/var/lib/postgresql/data
   pgadmin:
     image: dpage/pgadmin4:8.14
-    host: 192.168.67.9
+    host: 192.168.67.10
     port: "5050:80"
     env:
       clear:
@@ -64,7 +64,7 @@ accessories:
       - bookstore-pgadmin:/var/lib/pgadmin
   zipkin:
     image: openzipkin/zipkin
-    host: 192.168.67.9
+    host: 192.168.67.10
     port: "9411:9411"
 
 volumes:
