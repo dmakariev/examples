@@ -165,3 +165,9 @@ If you have a Ruby environment available, you can install Kamal globally with:
 ```sh
 gem install kamal
 ```
+
+### build docker image
+should include ***LABEL service="bookstore"***
+```sh
+docker buildx build --platform linux/amd64,linux/arm64 -t ghcr.io/dmakariev/bookstore:1.0.0 --push .
+```

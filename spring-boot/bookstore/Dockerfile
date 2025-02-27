@@ -10,6 +10,7 @@ RUN --mount=type=cache,target=/root/.m2 ./mvnw install -DskipTests -Penhance
 RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
 
 FROM ghcr.io/bell-sw/liberica-openjdk-alpine-musl:21
+LABEL service="bookstore"
 VOLUME /tmp
 ARG DEPENDENCY=/workspace/app/target/dependency
 COPY --from=build ${DEPENDENCY}/BOOT-INF/lib /app/lib
