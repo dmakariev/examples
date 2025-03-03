@@ -4,6 +4,7 @@ image: dmakariev/bookstore
 servers:
   web:
     - 192.168.67.9
+    - 192.168.67.12
 
 ssh:
   user: ubuntu

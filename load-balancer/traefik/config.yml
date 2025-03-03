@@ -1,0 +1,17 @@
+http:
+  routers:
+    app-router:
+      rule: "Host(`localhost`)"  # Replace with domain/IP if needed
+      service: app-service
+      entryPoints:
+        - web
+
+  services:
+    app-service:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.67.9:80"  # VM1
+          - url: "http://192.168.67.12:80"  # VM2
+        sticky:
+          cookie:
+            name: "traefik_sticky"  # Enables sticky sessions
