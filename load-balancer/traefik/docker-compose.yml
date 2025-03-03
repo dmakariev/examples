@@ -4,6 +4,7 @@ services:
     container_name: traefik
     ports:
       - "80:80"  # Expose Traefik on port 80
+      - "8080:8080" # For dashboard
     volumes:
       - ./traefik.yml:/etc/traefik/traefik.yml:ro  # Static config
       - ./config.yml:/etc/traefik/config.yml:ro     # Dynamic config

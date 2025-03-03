@@ -1,6 +1,8 @@
 entryPoints:
   web:
     address: ":80"
+  traefik:
+    address: ":8080"  # For dashboard
 
 providers:
   file:
@@ -9,3 +11,7 @@ providers:
 
 log:
   level: INFO
+
+api:
+  dashboard: true    # Enable dashboard
+  insecure: true     # No authentication, open access
