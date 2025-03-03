@@ -1,0 +1,14 @@
+services:
+  haproxy:
+    image: haproxy:latest  # As of March 2025, pulls the latest HAProxy
+    container_name: haproxy
+    ports:
+      - "80:80"  # Expose HAProxy on port 80
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro  # Config file
+    networks:
+      - haproxy-net
+
+networks:
+  haproxy-net:
+    driver: bridge
