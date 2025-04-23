@@ -1,0 +1,57 @@
+services:
+  prometheus:
+    image: prom/prometheus:v2.53.4
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--log.level=debug'      
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana:11.6.0
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - "GF_DEFAULT_APP_MODE=development"
+      - "GF_LOG_LEVEL=debug"
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_BASIC_ENABLED=false
+      - GF_FEATURE_TOGGLES_ENABLE=alertingSimplifiedRouting,alertingQueryAndExpressionsStepMode    
+    restart: unless-stopped
+    volumes:
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/provisioning/dashboards:/var/lib/grafana/dashboards
+      - ./grafana/dashboard.yaml:/etc/grafana/provisioning/dashboards/main.yaml
+    networks:
+      - monitoring
+
+  nginx-dev-proxy:
+    image: nginx:alpine
+    container_name: nginx_dev_proxy
+    ports:
+      - "8081:80"  # Expose nginx on port 8080 for proxy access
+    volumes:
+      - ./nginx/nginx-dev.conf:/etc/nginx/nginx.conf
+    networks:
+      - monitoring
+
+  nginx-prod-proxy:
+    image: nginx:alpine
+    container_name: nginx_prod_proxy
+    ports:
+      - "8082:80"  # Expose nginx on port 8080 for proxy access
+    volumes:
+      - ./nginx/nginx-prod.conf:/etc/nginx/nginx.conf
+    networks:
+      - monitoring
+
+networks:
+  monitoring:
+    driver: bridge
