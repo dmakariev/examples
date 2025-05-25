@@ -49,7 +49,7 @@
         </dependency>
         
         <!-- -->
-<!--        <dependency>
+        <!--        <dependency>
             <groupId>org.springframework.modulith</groupId>
             <artifactId>spring-modulith-starter-jpa</artifactId>
         </dependency>-->
@@ -203,6 +203,16 @@
                                         <require>asciidoctor-pdf</require>
                                     </requires>
                                     <outputDirectory>${project.build.directory}/docs/pdf</outputDirectory>
+                                    <attributes>
+                                        <pdf-theme>custom</pdf-theme>
+                                        <pdf-themesdir>${project.basedir}/src/main/pdf-theme</pdf-themesdir>
+                                        <source-highlighter>rouge</source-highlighter>
+                                        <icons>font</icons>
+                                        <pagenums/>
+                                        <toc/>
+                                        <idprefix/>
+                                        <idseparator>-</idseparator>
+                                    </attributes>                                    
                                 </configuration>
                             </execution>                            
                         </executions>
