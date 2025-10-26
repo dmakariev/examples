@@ -5,12 +5,12 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.6</version>
+        <version>3.5.7</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.makariev.examples.spring</groupId>
     <artifactId>bookstore</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.3-SNAPSHOT</version>
     <name>bookstore</name>
     <description>Bookstore example</description>
     <properties>
@@ -21,7 +21,7 @@
             <dependency>
                 <groupId>org.springframework.modulith</groupId>
                 <artifactId>spring-modulith-bom</artifactId>
-                <version>1.4.1</version>
+                <version>1.4.3</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>

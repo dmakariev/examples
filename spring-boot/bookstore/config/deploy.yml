@@ -3,8 +3,8 @@ image: dmakariev/bookstore
 
 servers:
   web:
-    - 192.168.67.9
-    - 192.168.67.12
+    - 192.168.68.2
+    - 192.168.68.3
 
 ssh:
   user: ubuntu
@@ -18,10 +18,11 @@ proxy:
     timeout: 40    # Integer, seconds
 
 registry:
-  server: ghcr.io
-  username: $MY_GITHUB_USERNAME
-  password:
-    - MY_GITHUB_PAT  # Adjust based on your secrets setup
+  server: "localhost:5555"
+#   server: ghcr.io
+#   username: $MY_GITHUB_USERNAME
+#   password:
+#     - MY_GITHUB_PAT  # Adjust based on your secrets setup
 
 builder:
   arch:
@@ -30,7 +31,7 @@ builder:
 env:
   clear:
     SERVER_PORT: "80"
-    SPRING_DATASOURCE_URL: "jdbc:postgresql://192.168.67.11:5432/bookstore"  # Changed to match container name
+    SPRING_DATASOURCE_URL: "jdbc:postgresql://192.168.68.5:5432/bookstore"  # Changed to match container name
     SPRING_DATASOURCE_USERNAME: "postgres"
     SPRING_DATASOURCE_PASSWORD: "bookstore"
     SPRING_H2_CONSOLE_ENABLED: "false"
@@ -38,12 +39,12 @@ env:
     SPRING_JPA_HIBERNATE_DDL_AUTO: "update"
     MANAGEMENT_TRACING_SAMPLING_PROBABILITY: "1.0"
     MANAGEMENT_TRACING_ENABLED: "true"
-    MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: "http://192.168.67.10:9411/api/v2/spans"  # Updated to match container name
+    MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: "http://192.168.68.4:9411/api/v2/spans"  # Updated to match container name
 
 accessories:
   db:
     image: postgres:17
-    host: 192.168.67.11
+    host: 192.168.68.5
     port: "5432:5432"
     env:
       clear:
@@ -53,7 +54,7 @@ accessories:
       - bookstore-db-data:/var/lib/postgresql/data
   pgadmin:
     image: dpage/pgadmin4:9.2.0
-    host: 192.168.67.10
+    host: 192.168.68.4
     port: "5050:80"
     env:
       clear:
@@ -65,7 +66,7 @@ accessories:
       - bookstore-pgadmin:/var/lib/pgadmin
   zipkin:
     image: openzipkin/zipkin:3
-    host: 192.168.67.10
+    host: 192.168.68.4
     port: "9411:9411"
 
 volumes:
