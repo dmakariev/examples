@@ -6,3 +6,4 @@ target/
 /spring-boot/bookstore/nbproject/
 node_modules
 spring-boot/crud-htmx-daisyui/src/main/frontend/node
+.ipynb_checkpoints

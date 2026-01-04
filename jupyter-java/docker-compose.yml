@@ -1,0 +1,15 @@
+services:
+  jupyter-java:
+    build:
+      context: .
+      args:
+        JJAVA_VERSION: "1.0-a6"
+    ports:
+      - "9999:8888"
+      - "9090:8080"
+    volumes:
+      - ./notebooks:/home/jovyan/work
+    environment:
+      # Tune memory if desired
+      JJAVA_JVM_OPTS: "-Xms256m -Xmx4g"
+    restart: unless-stopped
